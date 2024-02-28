@@ -1,0 +1,699 @@
+======== dataset: CA ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.4939567132920936, 'test': -0.4928316882805948, 'epoch': 36}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.47848501443775115, 'test': -0.48535030806298995, 'epoch': 51}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.500639170071822, 'test': -0.49766021272627686, 'epoch': 22}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.4893217770719733, 'test': -0.49228302630599313, 'epoch': 26}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.48925353997657034, 'test': -0.4926171924471558, 'epoch': 22}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.4855409372619587, 'test': -0.49172186687024827, 'epoch': 22}
+
+---- rf False - bias True ----
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.4825356440604012, 'test': -0.4851317013088115, 'epoch': 58}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.47760969625894284, 'test': -0.4869883309058002, 'epoch': 67}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.47155123552456035, 'test': -0.48405565861170874, 'epoch': 67}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.47836231361281495, 'test': -0.4980013828989563, 'epoch': 75}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.48225970844115207, 'test': -0.48479997952513043, 'epoch': 60}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.48625995416807877, 'test': -0.49087644196910113, 'epoch': 53}
+
+---- rf True - bias False ----
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.49207058550258764, 'test': -0.4953355525275199, 'epoch': 43}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.47549618155393447, 'test': -0.48693205652898075, 'epoch': 60}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.4925055787488207, 'test': -0.4970082466603774, 'epoch': 37}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.4867028092032211, 'test': -0.49353698667202334, 'epoch': 37}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.49098364436813535, 'test': -0.4907587528504906, 'epoch': 36}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.4920127400904073, 'test': -0.49243360360516036, 'epoch': 36}
+
+---- rf True - bias True ----
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.47874267562514916, 'test': -0.4896553933817721, 'epoch': 66}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.4799209437522367, 'test': -0.49690714912652817, 'epoch': 66}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.48133135708919916, 'test': -0.4906268024526743, 'epoch': 47}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.4821463808320684, 'test': -0.48947836789317, 'epoch': 51}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.47975698545498524, 'test': -0.49504463381220715, 'epoch': 47}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.48232729868448626, 'test': -0.48958001997868694, 'epoch': 41}
+
+==============================
+
+======== dataset: CO ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.85375, 'test': 0.857, 'epoch': 45}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8575, 'test': 0.85125, 'epoch': 38}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.8503125, 'test': 0.84275, 'epoch': 45}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.845, 'test': 0.84725, 'epoch': 32}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.850625, 'test': 0.854, 'epoch': 58}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.84625, 'test': 0.84775, 'epoch': 26}
+
+---- rf False - bias True ----
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8590625, 'test': 0.859, 'epoch': 45}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8571875, 'test': 0.86225, 'epoch': 40}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.865625, 'test': 0.868, 'epoch': 58}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.86375, 'test': 0.867, 'epoch': 73}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.86, 'test': 0.858, 'epoch': 45}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.8653125, 'test': 0.86775, 'epoch': 40}
+
+---- rf True - bias False ----
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8475, 'test': 0.84575, 'epoch': 24}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8484375, 'test': 0.8545, 'epoch': 42}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.848125, 'test': 0.851, 'epoch': 31}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.8453125, 'test': 0.8465, 'epoch': 24}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.8496875, 'test': 0.84725, 'epoch': 29}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.85, 'test': 0.84825, 'epoch': 36}
+
+---- rf True - bias True ----
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8509375, 'test': 0.851, 'epoch': 40}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8446875, 'test': 0.851, 'epoch': 65}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.8528125, 'test': 0.85075, 'epoch': 40}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.8590625, 'test': 0.8665, 'epoch': 65}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.851875, 'test': 0.85425, 'epoch': 43}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.85625, 'test': 0.86, 'epoch': 48}
+
+==============================
+
+======== dataset: KD ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='KD', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.596875, 'test': 0.5865, 'epoch': 45}
+
+Namespace(dataset='KD', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.608125, 'test': 0.59675, 'epoch': 64}
+
+Namespace(dataset='KD', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.5925, 'test': 0.598, 'epoch': 41}
+
+Namespace(dataset='KD', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.593125, 'test': 0.5965, 'epoch': 37}
+
+Namespace(dataset='KD', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.600625, 'test': 0.59125, 'epoch': 56}
+
+Namespace(dataset='KD', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.5865625, 'test': 0.5835, 'epoch': 39}
+
+---- rf False - bias True ----
+
+Namespace(dataset='KD', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.6075, 'test': 0.6035, 'epoch': 67}
+
+Namespace(dataset='KD', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.61, 'test': 0.60175, 'epoch': 59}
+
+Namespace(dataset='KD', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.6075, 'test': 0.6065, 'epoch': 81}
+
+Namespace(dataset='KD', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.62, 'test': 0.62475, 'epoch': 61}
+
+Namespace(dataset='KD', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.61375, 'test': 0.61675, 'epoch': 59}
+
+Namespace(dataset='KD', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.6190625, 'test': 0.61675, 'epoch': 61}
+
+---- rf True - bias False ----
+
+Namespace(dataset='KD', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.5825, 'test': 0.587, 'epoch': 62}
+
+Namespace(dataset='KD', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.5996875, 'test': 0.589, 'epoch': 54}
+
+Namespace(dataset='KD', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.59, 'test': 0.5865, 'epoch': 39}
+
+Namespace(dataset='KD', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.593125, 'test': 0.58825, 'epoch': 51}
+
+Namespace(dataset='KD', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.5940625, 'test': 0.58225, 'epoch': 55}
+
+Namespace(dataset='KD', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.5959375, 'test': 0.5795, 'epoch': 68}
+
+---- rf True - bias True ----
+
+Namespace(dataset='KD', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.596875, 'test': 0.59175, 'epoch': 63}
+
+Namespace(dataset='KD', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.611875, 'test': 0.59425, 'epoch': 64}
+
+Namespace(dataset='KD', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.5984375, 'test': 0.59625, 'epoch': 49}
+
+Namespace(dataset='KD', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.6078125, 'test': 0.603, 'epoch': 59}
+
+Namespace(dataset='KD', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.5959375, 'test': 0.59075, 'epoch': 72}
+
+Namespace(dataset='KD', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.608125, 'test': 0.60625, 'epoch': 59}
+
+==============================
+
+======== dataset: NE ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='NE', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.6421875, 'test': 0.6165, 'epoch': 39}
+
+Namespace(dataset='NE', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.6471875, 'test': 0.6365, 'epoch': 78}
+
+Namespace(dataset='NE', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.638125, 'test': 0.62725, 'epoch': 50}
+
+Namespace(dataset='NE', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.6359375, 'test': 0.6215, 'epoch': 45}
+
+Namespace(dataset='NE', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.633125, 'test': 0.61775, 'epoch': 51}
+
+Namespace(dataset='NE', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.635625, 'test': 0.62225, 'epoch': 51}
+
+---- rf False - bias True ----
+
+Namespace(dataset='NE', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.655, 'test': 0.6445, 'epoch': 64}
+
+Namespace(dataset='NE', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.653125, 'test': 0.6365, 'epoch': 52}
+
+Namespace(dataset='NE', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.658125, 'test': 0.6445, 'epoch': 79}
+
+Namespace(dataset='NE', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.6640625, 'test': 0.6545, 'epoch': 59}
+
+Namespace(dataset='NE', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.654375, 'test': 0.63575, 'epoch': 75}
+
+Namespace(dataset='NE', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.656875, 'test': 0.6415, 'epoch': 73}
+
+---- rf True - bias False ----
+
+Namespace(dataset='NE', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.6353125, 'test': 0.62475, 'epoch': 40}
+
+Namespace(dataset='NE', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.644375, 'test': 0.63125, 'epoch': 68}
+
+Namespace(dataset='NE', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.6365625, 'test': 0.6225, 'epoch': 46}
+
+Namespace(dataset='NE', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.64, 'test': 0.619, 'epoch': 61}
+
+Namespace(dataset='NE', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.63125, 'test': 0.6245, 'epoch': 35}
+
+Namespace(dataset='NE', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.6359375, 'test': 0.6245, 'epoch': 55}
+
+---- rf True - bias True ----
+
+Namespace(dataset='NE', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.6409375, 'test': 0.622, 'epoch': 46}
+
+Namespace(dataset='NE', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.6396875, 'test': 0.628, 'epoch': 75}
+
+Namespace(dataset='NE', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.6415625, 'test': 0.62825, 'epoch': 46}
+
+Namespace(dataset='NE', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.6484375, 'test': 0.6355, 'epoch': 76}
+
+Namespace(dataset='NE', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.64875, 'test': 0.62775, 'epoch': 56}
+
+Namespace(dataset='NE', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.655, 'test': 0.6465, 'epoch': 71}
+
+==============================
+
+======== dataset: LF ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='LF', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.9471875, 'test': 0.93375, 'epoch': 21}
+
+Namespace(dataset='LF', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.9496875, 'test': 0.939, 'epoch': 23}
+
+Namespace(dataset='LF', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.9503125, 'test': 0.935, 'epoch': 21}
+
+Namespace(dataset='LF', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.9534375, 'test': 0.93425, 'epoch': 14}
+
+Namespace(dataset='LF', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.9503125, 'test': 0.936, 'epoch': 26}
+
+Namespace(dataset='LF', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.955, 'test': 0.93475, 'epoch': 14}
+
+---- rf False - bias True ----
+
+Namespace(dataset='LF', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.9496875, 'test': 0.937, 'epoch': 20}
+
+Namespace(dataset='LF', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.9515625, 'test': 0.937, 'epoch': 31}
+
+Namespace(dataset='LF', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.9515625, 'test': 0.9365, 'epoch': 20}
+
+Namespace(dataset='LF', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.95375, 'test': 0.93725, 'epoch': 21}
+
+Namespace(dataset='LF', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.9509375, 'test': 0.939, 'epoch': 17}
+
+Namespace(dataset='LF', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.95375, 'test': 0.93925, 'epoch': 31}
+
+---- rf True - bias False ----
+
+Namespace(dataset='LF', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.9521875, 'test': 0.935, 'epoch': 21}
+
+Namespace(dataset='LF', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.95125, 'test': 0.9405, 'epoch': 31}
+
+Namespace(dataset='LF', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.9496875, 'test': 0.93925, 'epoch': 21}
+
+Namespace(dataset='LF', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.9496875, 'test': 0.9375, 'epoch': 17}
+
+Namespace(dataset='LF', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.94875, 'test': 0.936, 'epoch': 20}
+
+Namespace(dataset='LF', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.949375, 'test': 0.9375, 'epoch': 20}
+
+---- rf True - bias True ----
+
+Namespace(dataset='LF', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.94875, 'test': 0.9365, 'epoch': 27}
+
+Namespace(dataset='LF', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.9515625, 'test': 0.93975, 'epoch': 27}
+
+Namespace(dataset='LF', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.94875, 'test': 0.9345, 'epoch': 20}
+
+Namespace(dataset='LF', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.9521875, 'test': 0.94075, 'epoch': 32}
+
+Namespace(dataset='LF', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.9509375, 'test': 0.936, 'epoch': 26}
+
+Namespace(dataset='LF', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.95125, 'test': 0.93975, 'epoch': 23}
+
+==============================
+
+======== dataset: DI ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='DI', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -54.58196473435581, 'test': -57.63062999307498, 'epoch': 31}
+
+Namespace(dataset='DI', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -53.75099725203483, 'test': -53.34996620997514, 'epoch': 26}
+
+Namespace(dataset='DI', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -54.767985845039206, 'test': -56.192737962666705, 'epoch': 6}
+
+Namespace(dataset='DI', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -56.42069665430408, 'test': -56.698002292264796, 'epoch': 7}
+
+Namespace(dataset='DI', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -55.371350533239664, 'test': -55.07588220352046, 'epoch': 20}
+
+Namespace(dataset='DI', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -54.87961229449299, 'test': -56.15747938156144, 'epoch': 11}
+
+---- rf False - bias True ----
+
+Namespace(dataset='DI', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -55.25483333045101, 'test': -55.009556863729536, 'epoch': 19}
+
+Namespace(dataset='DI', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -53.95441360607387, 'test': -53.63929034862683, 'epoch': 27}
+
+Namespace(dataset='DI', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -54.256717916081854, 'test': -54.26000162743485, 'epoch': 27}
+
+Namespace(dataset='DI', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -54.50821223852696, 'test': -55.25000892785042, 'epoch': 10}
+
+Namespace(dataset='DI', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -55.62172182319528, 'test': -53.20528095316407, 'epoch': 19}
+
+Namespace(dataset='DI', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -54.32072724513144, 'test': -55.62703430842854, 'epoch': 11}
+
+---- rf True - bias False ----
+
+Namespace(dataset='DI', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -54.40928366656147, 'test': -57.10061494757543, 'epoch': 8}
+
+Namespace(dataset='DI', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -54.69410710035611, 'test': -54.29733188699969, 'epoch': 35}
+
+Namespace(dataset='DI', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -54.390582088337155, 'test': -57.48978871675273, 'epoch': 8}
+
+Namespace(dataset='DI', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -53.582306427378235, 'test': -57.296757351179394, 'epoch': 8}
+
+Namespace(dataset='DI', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -55.42153404053924, 'test': -58.31461552515369, 'epoch': 40}
+
+Namespace(dataset='DI', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -53.60186394555998, 'test': -56.99648298531344, 'epoch': 9}
+
+---- rf True - bias True ----
+
+Namespace(dataset='DI', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -54.83771026240467, 'test': -55.22479472710986, 'epoch': 28}
+
+Namespace(dataset='DI', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -54.53305220723143, 'test': -54.49522508254671, 'epoch': 35}
+
+Namespace(dataset='DI', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -54.015999362600645, 'test': -55.39375413873497, 'epoch': 19}
+
+Namespace(dataset='DI', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -53.96360632914882, 'test': -54.23820339222984, 'epoch': 19}
+
+Namespace(dataset='DI', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -53.222795250710135, 'test': -54.657250777078865, 'epoch': 32}
+
+Namespace(dataset='DI', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -53.365864411588255, 'test': -54.170356516471436, 'epoch': 28}
+
+==============================
+
+======== dataset: CO ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8103125, 'test': 0.80525, 'epoch': 28}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8409375, 'test': 0.83675, 'epoch': 77}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.8103125, 'test': 0.8085, 'epoch': 43}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.8134375, 'test': 0.802, 'epoch': 22}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.811875, 'test': 0.80775, 'epoch': 42}
+
+Namespace(dataset='CO', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.8140625, 'test': 0.8055, 'epoch': 41}
+
+---- rf False - bias True ----
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8453125, 'test': 0.847, 'epoch': 71}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8421875, 'test': 0.838, 'epoch': 59}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.851875, 'test': 0.8605, 'epoch': 103}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.858125, 'test': 0.85475, 'epoch': 99}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.8528125, 'test': 0.85825, 'epoch': 154}
+
+Namespace(dataset='CO', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.8534375, 'test': 0.85125, 'epoch': 115}
+
+---- rf True - bias False ----
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8178125, 'test': 0.81275, 'epoch': 49}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8390625, 'test': 0.829, 'epoch': 66}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.814375, 'test': 0.813, 'epoch': 42}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.811875, 'test': 0.81275, 'epoch': 67}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.81625, 'test': 0.80625, 'epoch': 78}
+
+Namespace(dataset='CO', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.8125, 'test': 0.8135, 'epoch': 39}
+
+---- rf True - bias True ----
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': 0.8609375, 'test': 0.84825, 'epoch': 96}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': 0.8403125, 'test': 0.82725, 'epoch': 63}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': 0.8509375, 'test': 0.84725, 'epoch': 66}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': 0.8528125, 'test': 0.84575, 'epoch': 84}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': 0.8446875, 'test': 0.84675, 'epoch': 76}
+
+Namespace(dataset='CO', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': 0.8528125, 'test': 0.84475, 'epoch': 101}
+
+==============================
+
+======== dataset: CA ========
+
+---- rf False - bias False ----
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.4939567132920936, 'test': -0.4928316882805948, 'epoch': 36}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.47848501443775115, 'test': -0.48535030806298995, 'epoch': 51}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.49860660993389255, 'test': -0.4985348543192321, 'epoch': 39}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.4893217770719733, 'test': -0.49228302630599313, 'epoch': 26}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.48925353997657034, 'test': -0.4926171924471558, 'epoch': 22}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.4855409372619587, 'test': -0.49172186687024827, 'epoch': 22}
+
+---- rf False - bias True ----
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.4825356440604012, 'test': -0.4851317013088115, 'epoch': 58}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.47760969625894284, 'test': -0.4869883309058002, 'epoch': 67}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.47155123552456035, 'test': -0.48405565861170874, 'epoch': 67}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.47836231361281495, 'test': -0.4980013828989563, 'epoch': 75}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.48225970844115207, 'test': -0.48479997952513043, 'epoch': 60}
+
+Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.48625995416807877, 'test': -0.49087644196910113, 'epoch': 53}
+
+---- rf True - bias False ----
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.49207058550258764, 'test': -0.4953355525275199, 'epoch': 43}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.47549618155393447, 'test': -0.48693205652898075, 'epoch': 60}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.4925055787488207, 'test': -0.4970082466603774, 'epoch': 37}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.4867028092032211, 'test': -0.49353698667202334, 'epoch': 37}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.49090806789016656, 'test': -0.498754496919348, 'epoch': 53}
+
+Namespace(dataset='CA', rf='True', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.49190427937893516, 'test': -0.5060661732282636, 'epoch': 75}
+
+---- rf True - bias True ----
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.47874267562514916, 'test': -0.4896553933817721, 'epoch': 66}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_normal', fan=None)
+{'val': -0.4799209437522367, 'test': -0.49690714912652817, 'epoch': 66}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.48133135708919916, 'test': -0.4906268024526743, 'epoch': 47}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_uniform', fan='fan_out')
+{'val': -0.4821463808320684, 'test': -0.48947836789317, 'epoch': 51}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_in')
+{'val': -0.47975698545498524, 'test': -0.49504463381220715, 'epoch': 47}
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out')
+{'val': -0.48232729868448626, 'test': -0.48958001997868694, 'epoch': 41}
+
+==============================
+
+testing: real random feature (sum + ReLU)
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5221885565119729, 'test': -0.5411208314452887, 'epoch': 58}  // n = 1
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5207173311487405, 'test': -0.5324150378620116, 'epoch': 30}  // n = 8
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5195610141263769, 'test': -0.5355572358479577, 'epoch': 28}  // n = 36
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5107984117581511, 'test': -0.5270356235993519, 'epoch': 34}  // n = 40
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5189910619390548, 'test': -0.5376543932993141, 'epoch': 98}  // n = 1  192 -> 384
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5133128637828105, 'test': -0.5283108188483643, 'epoch': 54}  // n = 20 192 -> 384
+
+added no grad:
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5139260494238755, 'test': -0.5223155748018266, 'epoch': 34}  // n = 20 192 -> 384  9min
+
+Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
+{'val': -0.5100753027895347, 'test': -0.5183965099122712, 'epoch': 92}  // n = 20 --pca-> 10  192 ------> 384  25min
