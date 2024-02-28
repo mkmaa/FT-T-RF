@@ -232,7 +232,7 @@ def main(args):
         n_cont_features=n_cont_features,
         cat_cardinalities=cat_cardinalities,
         d_out=d_out,
-        **FTTransformer.get_default_kwargs(n_blocks=6),
+        **FTTransformer.get_default_kwargs(n_blocks=args.n_blocks),
     ).to(device)
     optimizer = model.make_default_optimizer()
 
@@ -354,6 +354,13 @@ if __name__ == "__main__":
     parser.add_argument('--activation', type=str, default='ReGLU', choices=['ReGLU', 'ReLU'], help='ReGLU or ReLU')
     parser.add_argument('--init', type=str, choices=['xavier_uniform', 'xavier_normal', 'kaiming_uniform', 'kaiming_normal'], help='Xavier or Kaiming, uniform or normal')
     parser.add_argument('--fan', type=str, choices=['fan_in', 'fan_out'], help='fan_in or fan_out, only in Kaiming init')
+    parser.add_argument('--n_blocks', type=int, default=3, choices=[1, 2, 3, 4, 5, 6], help='n_blocks of token embedding in FT-T')
     
     args = parser.parse_args()
+    if args.init == 'kaiming_uniform' or 'kaiming_normal':
+        if args.fan == None:
+            raise AssertionError('please input fan mode')
+    else:
+        args.fan = None
+    
     main(args)

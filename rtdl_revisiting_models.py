@@ -195,26 +195,20 @@ class LinearEmbeddings(nn.Module):
         # self.weight = Parameter(torch.empty(n_features, d_embedding))
         # self.bias = Parameter(torch.empty(n_features, d_embedding))
         
-        rf_size = None
-        pca_size = None
-        clip_data_value = None
-        
         if args.rf == 'True':
             rf_size = 20
             pca_size = 10
             clip_data_value = 27.6041
             self.weight = Parameter(torch.empty(n_features, d_embedding, rf_size))
             self.bias = Parameter(torch.empty(n_features, d_embedding, rf_size))
+    
+            self.pca_size = pca_size
+            self.clip_data_value = clip_data_value
         else:
             self.weight = Parameter(torch.empty(n_features, d_embedding))
             self.bias = Parameter(torch.empty(n_features, d_embedding))
         
         self.reset_parameters()
-        
-        if args.rf == 'True':
-            self.rf_size = rf_size
-            self.pca_size = pca_size
-            self.clip_data_value = clip_data_value
 
     def reset_parameters(self) -> None:
         # print('shape =', self.weight.shape)

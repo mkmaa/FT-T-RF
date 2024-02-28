@@ -1,0 +1,9 @@
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
+{'val': -0.49860660993389255, 'test': -0.4985348543192321, 'epoch': 39}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out', n_blocks=1)
+{'val': -0.5010630361367722, 'test': -0.5019251998139612, 'epoch': 123}
+
+Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan='fan_out', n_blocks=1)
+{'val': -0.5056371557684962, 'test': -0.5025277487957456, 'epoch': 182}
+
