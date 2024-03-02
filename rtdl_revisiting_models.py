@@ -783,8 +783,6 @@ class FTTransformer(nn.Module):
             _is_default: this is a technical argument, don't set it manually.
             backbone_kwargs: the keyword arguments for the `FTTransformerBackbone`.
         """
-        
-        print('this is init in package')
         global args
         args = FTTargs
         
@@ -947,6 +945,8 @@ class FTTransformer(nn.Module):
                             f'{argname} must not be None'
                         )
                     )
+                # print(argname, argvalue)
+                # print('embeddings:', module(argvalue).shape)
                 x_embeddings.append(module(argvalue))
         assert x_embeddings, _INTERNAL_ERROR
         x = torch.cat(x_embeddings, dim=1)

@@ -21,6 +21,8 @@ import argparse
 warnings.resetwarnings()
 from rtdl_revisiting_models import FTTransformer
 
+from read_data import read_dataset
+
 TaskType = Literal["regression", "binclass", "multiclass"]
 
 def main(args):
@@ -29,41 +31,43 @@ def main(args):
     delu.random.seed(0)
 
     # >>> Dataset.
+    D, N, C, Y, y_info = read_dataset(args)
 
-    task_type: TaskType = "regression"
+    task_type: TaskType = D.info['task_type']
     n_classes = None
-    if args.dataset == 'CA':
-        dataset = sklearn.datasets.fetch_california_housing() # CA regression
-        task_type: TaskType = 'regression'
-        n_classes = None
-    elif args.dataset == 'CO':
-        dataset = sklearn.datasets.fetch_covtype() # CO multiclass 7
-        task_type: TaskType = 'multiclass'
-        n_classes = 7
-    elif args.dataset == 'KD':
-        dataset = sklearn.datasets.fetch_kddcup99() # KD multiclass 23
-        task_type: TaskType = 'multiclass'
-        n_classes = 23
-    elif args.dataset == 'RC':
-        dataset = sklearn.datasets.fetch_rcv1() # RC multiclass 103
-        task_type: TaskType = 'multiclass'
-        n_classes = 103
-    elif args.dataset == 'NE':
-        dataset = sklearn.datasets.fetch_20newsgroups_vectorized() # NE multiclass 20
-        task_type: TaskType = 'multiclass'
-        n_classes = 20
-    elif args.dataset == 'LF':
-        dataset = sklearn.datasets.fetch_lfw_pairs() # LF binclass
-        task_type: TaskType = 'binclass'
-        n_classes = 2
-    elif args.dataset == 'DI':
-        dataset = sklearn.datasets.load_diabetes() # DI regression
-        task_type: TaskType = 'regression'
-        n_classes = None
-    else:
-        AssertionError()
-    X_cont: np.ndarray = dataset["data"]
-    Y: np.ndarray = dataset["target"]
+    
+    # if args.dataset == 'CA':
+    #     dataset = sklearn.datasets.fetch_california_housing() # CA regression
+    #     task_type: TaskType = 'regression'
+    #     n_classes = None
+    # elif args.dataset == 'CO':
+    #     dataset = sklearn.datasets.fetch_covtype() # CO multiclass 7
+    #     task_type: TaskType = 'multiclass'
+    #     n_classes = 7
+    # elif args.dataset == 'KD':
+    #     dataset = sklearn.datasets.fetch_kddcup99() # KD multiclass 23
+    #     task_type: TaskType = 'multiclass'
+    #     n_classes = 23
+    # elif args.dataset == 'RC':
+    #     dataset = sklearn.datasets.fetch_rcv1() # RC multiclass 103
+    #     task_type: TaskType = 'multiclass'
+    #     n_classes = 103
+    # elif args.dataset == 'NE':
+    #     dataset = sklearn.datasets.fetch_20newsgroups_vectorized() # NE multiclass 20
+    #     task_type: TaskType = 'multiclass'
+    #     n_classes = 20
+    # elif args.dataset == 'LF':
+    #     dataset = sklearn.datasets.fetch_lfw_pairs() # LF binclass
+    #     task_type: TaskType = 'binclass'
+    #     n_classes = 2
+    # elif args.dataset == 'DI':
+    #     dataset = sklearn.datasets.load_diabetes() # DI regression
+    #     task_type: TaskType = 'regression'
+    #     n_classes = None
+    # else:
+    #     AssertionError()
+    # X_cont: np.ndarray = dataset["data"]
+    # Y: np.ndarray = dataset["target"]
     
     # NOTE: uncomment to solve a classification task.
     # if (task_type != 'regression'):
@@ -77,42 +81,44 @@ def main(args):
     #         n_redundant=2,
     #     )
     
-    if args.dataset == 'CO':
-        unique_Y = np.sort(np.unique(Y))
-        Y = np.searchsorted(unique_Y, Y)
+    # if args.dataset == 'CO':
+    #     unique_Y = np.sort(np.unique(Y))
+    #     Y = np.searchsorted(unique_Y, Y)
         
-        n_samples = X_cont.shape[0]
-        indices = np.random.permutation(n_samples)
-        X_cont = X_cont[indices]
-        Y = Y[indices]
-        if n_samples > 20000:
-            X_cont = X_cont[:20000]
-            Y = Y[:20000]
+    #     n_samples = X_cont.shape[0]
+    #     indices = np.random.permutation(n_samples)
+    #     X_cont = X_cont[indices]
+    #     Y = Y[indices]
+    #     if n_samples > 20000:
+    #         X_cont = X_cont[:20000]
+    #         Y = Y[:20000]
 
     # >>> Continuous features.
-    X_cont: np.ndarray = X_cont.astype(np.float32)
-    n_cont_features = X_cont.shape[1]
+    # X_cont: np.ndarray = X_cont.astype(np.float32)
+    # n_cont_features = X_cont.shape[1]
 
     # >>> Categorical features.
     # NOTE: the above datasets do not have categorical features, but,
     # for the demonstration purposes, it is possible to generate them.
-    cat_cardinalities = [
-        # NOTE: uncomment the two lines below to add two categorical features.
-        # 4,  # Allowed values: [0, 1, 2, 3].
-        # 7,  # Allowed values: [0, 1, 2, 3, 4, 5, 6].
-    ]
-    X_cat = (
-        np.column_stack(
-            [np.random.randint(0, c, (len(X_cont),)) for c in cat_cardinalities]
-        )
-        if cat_cardinalities
-        else None
-    )
+    # cat_cardinalities = [
+    #     # NOTE: uncomment the two lines below to add two categorical features.
+    #     # 4,  # Allowed values: [0, 1, 2, 3].
+    #     # 7,  # Allowed values: [0, 1, 2, 3, 4, 5, 6].
+    # ]
+    # X_cat = (
+    #     np.column_stack(
+    #         [np.random.randint(0, c, (len(X_cont),)) for c in cat_cardinalities]
+    #     )
+    #     if cat_cardinalities
+    #     else None
+    # )
 
     # >>> Labels.
     # Regression labels must be represented by float32.
     if task_type == "regression":
-        Y = Y.astype(np.float32)
+        Y['train'] = Y['train'].astype(np.float32)
+        Y['val'] = Y['val'].astype(np.float32)
+        Y['test'] = Y['test'].astype(np.float32)
     else:
         assert n_classes is not None
         Y = Y.astype(np.int64)
@@ -120,23 +126,23 @@ def main(args):
             range(n_classes)
         ), "Classification labels must form the range [0, 1, ..., n_classes - 1]"
 
-    # >>> Split the dataset.
-    all_idx = np.arange(len(Y))
-    trainval_idx, test_idx = sklearn.model_selection.train_test_split(
-        all_idx, train_size=0.8
-    )
-    train_idx, val_idx = sklearn.model_selection.train_test_split(
-        trainval_idx, train_size=0.8
-    )
     data_numpy = {
-        "train": {"x_cont": X_cont[train_idx], "y": Y[train_idx]},
-        "val": {"x_cont": X_cont[val_idx], "y": Y[val_idx]},
-        "test": {"x_cont": X_cont[test_idx], "y": Y[test_idx]},
+        "train": {"y": Y['train']},
+        "val": {"y": Y['val']},
+        "test": {"y": Y['test']},
     }
-    if X_cat is not None:
-        data_numpy["train"]["x_cat"] = X_cat[train_idx]
-        data_numpy["val"]["x_cat"] = X_cat[val_idx]
-        data_numpy["test"]["x_cat"] = X_cat[test_idx]
+    if N is not None:
+        data_numpy["train"]["x_cont"] = N['train'].astype(np.float32)
+        data_numpy["val"]["x_cont"] = N['val'].astype(np.float32)
+        data_numpy["test"]["x_cont"] = N['test'].astype(np.float32)
+    if C is not None:
+        data_numpy["train"]["x_cat"] = C['train'].astype(np.int64)
+        data_numpy["val"]["x_cat"] = C['val'].astype(np.int64)
+        data_numpy["test"]["x_cat"] = C['test'].astype(np.int64)
+        
+    train_idx = (len(N['train']) if N is not None else 0) + (len(C['train']) if C is not None else 0)
+    # val_idx = len(N['val']) + len(C['val'])
+    # test_idx = len(N['test']) + len(C['test'])
         
     # >>> Feature preprocessing.
     # NOTE
@@ -156,7 +162,7 @@ def main(args):
         .astype(X_cont_train_numpy.dtype)
     )
     preprocessing = sklearn.preprocessing.QuantileTransformer(
-        n_quantiles=max(min(len(train_idx) // 30, 1000), 10),
+        n_quantiles=max(min(train_idx // 30, 1000), 10),
         output_distribution="normal",
         subsample=10**9,
     ).fit(X_cont_train_numpy + noise)
@@ -188,8 +194,8 @@ def main(args):
 
     model = FTTransformer(
         FTTargs=args,
-        n_cont_features=n_cont_features,
-        cat_cardinalities=cat_cardinalities,
+        n_cont_features=D.info['n_num_features'],
+        cat_cardinalities=D.info['cat_cardinalities'],
         d_out=d_out,
         **FTTransformer.get_default_kwargs(n_blocks=args.n_blocks),
     ).to(device)
@@ -249,7 +255,7 @@ def main(args):
     patience = 16
 
     batch_size = 256
-    epoch_size = math.ceil(len(train_idx) / batch_size)
+    epoch_size = math.ceil(train_idx / batch_size)
     timer = delu.tools.Timer()
     early_stopping = delu.tools.EarlyStopping(patience, mode="max")
     best = {
@@ -295,7 +301,7 @@ def main(args):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
-    parser.add_argument('--dataset', type=str, choices=['CA', 'CO', 'KD', 'RC', 'NE', 'LF', 'DI'], help='dataset')
+    parser.add_argument('--dataset', type=str, choices=['CA', 'CO', 'KD', 'RC', 'NE', 'LF', 'DI', 'r1', 'r2'], help='dataset')
     parser.add_argument('--rf_in', type=str, choices=['True', 'False'], help='inner random feature, replace feature tokenizer')
     parser.add_argument('--rf_out', type=str, choices=['True', 'False'], help='outler random feature, work with feature tokenizer')
     parser.add_argument('--bias', type=str, choices=['True', 'False'], help='bias, only in uniform init')
@@ -303,6 +309,12 @@ if __name__ == "__main__":
     parser.add_argument('--init', type=str, choices=['xavier_uniform', 'xavier_normal', 'kaiming_uniform', 'kaiming_normal'], help='Xavier or Kaiming, uniform or normal')
     parser.add_argument('--fan', type=str, choices=['fan_in', 'fan_out'], help='fan_in or fan_out, only in Kaiming init')
     parser.add_argument('--n_blocks', type=int, default=3, choices=[1, 2, 3, 4, 5, 6], help='n_blocks of token embedding in FT-T')
+    
+    parser.add_argument('--normalization', type=str, default='standard', help='Normalization method')
+    parser.add_argument('--num_nan_policy', type=str, default='mean', help='How to deal with missing values in numerical features')
+    parser.add_argument('--cat_nan_policy', type=str, default='most_frequent', help='How to deal with missing values in categorical features')
+    parser.add_argument('--cat_policy', type=str, default='onehot', help='How to deal with categorical features')
+    parser.add_argument('--seed', type=int, default=0)
     
     args = parser.parse_args()
     if args.init == 'kaiming_uniform' or 'kaiming_normal':

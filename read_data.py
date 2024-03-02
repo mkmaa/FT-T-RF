@@ -128,7 +128,7 @@ class Dataset:
 
         if not self.C:
             assert N is not None
-            return N
+            return N, None
 
         C = deepcopy(self.C)
 
@@ -143,17 +143,10 @@ class Dataset:
             )
             onehot.fit(C['train'])
             C = {k: onehot.transform(v) for k, v in C.items()}
-            if N is None:
-                result = C
-            else:
-                result = {}
-                for x in N:
-                    result[x] = np.hstack((N[x], C[x]))
+            return N, C
         else:
             # TODO 在这里实现对category features的编码
             raise ValueError('No such option')
-
-        return result  # type: ignore[code]
 
     def build_y(
         self
@@ -179,7 +172,7 @@ class Dataset:
 def read_dataset(args):
     # print(args)
     D = Dataset.from_dir(os.path.join('data', args.dataset))
-    X = D.build_X(  
+    N, C = D.build_X(  
         normalization = args.normalization,
         num_nan_policy = args.num_nan_policy,
         cat_nan_policy = args.cat_nan_policy,
@@ -187,4 +180,4 @@ def read_dataset(args):
         seed=args.seed
     )
     Y, y_info = D.build_y()
-    return D, X, Y, y_info
+    return D, N, C, Y, y_info

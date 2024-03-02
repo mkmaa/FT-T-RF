@@ -1,18 +1,6 @@
-Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_uniform', fan='fan_in')
-{'val': -0.49860660993389255, 'test': -0.4985348543192321, 'epoch': 39}
+Namespace(dataset='r2', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.14071547723548178, 'test': -0.18761778152120806, 'epoch': 88}
 
-Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out', n_blocks=1)
-{'val': -0.5010630361367722, 'test': -0.5019251998139612, 'epoch': 123}
-
-Namespace(dataset='CA', rf='False', bias='False', activation='ReGLU', init='xavier_normal', fan='fan_out', n_blocks=1)
-{'val': -0.5056371557684962, 'test': -0.5025277487957456, 'epoch': 182}
-
-Namespace(dataset='CA', rf='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1)
-{'val': -0.501842611516361, 'test': -0.5016481000998689, 'epoch': 151}
-
-Namespace(dataset='CA', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='kaiming_normal', fan='fan_out', n_blocks=1)
-{'val': -0.49489945349593956, 'test': -0.4977371524595365, 'epoch': 143}
-
-Namespace(dataset='CA', rf_in='False', rf_out=None, bias='False', activation='ReGLU', init='kaiming_normal', fan='fan_out', n_blocks=1)
-{'val': -0.5010630361367722, 'test': -0.5019251998139612, 'epoch': 123}
+Namespace(dataset='r1', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.9230175373647225, 'test': -0.9868814257267012, 'epoch': 1}
 
