@@ -195,7 +195,7 @@ class LinearEmbeddings(nn.Module):
         # self.weight = Parameter(torch.empty(n_features, d_embedding))
         # self.bias = Parameter(torch.empty(n_features, d_embedding))
         
-        if args.rf == 'True':
+        if args.rf_in == 'True':
             rf_size = 20
             pca_size = 10
             clip_data_value = 27.6041
@@ -257,7 +257,7 @@ class LinearEmbeddings(nn.Module):
         # x = x + self.bias[None]
         
         # modify here: add relu
-        if args.rf == 'True':
+        if args.rf_in == 'True':
             with torch.no_grad():
                 x = x[..., None, None] * self.weight
                 x = x + self.bias[None]
@@ -727,13 +727,13 @@ class FTTransformerBackbone(nn.Module):
             x_identity = x
             if 'attention_normalization' in block:
                 x = block['attention_normalization'](x)
-            x = block['attention'](x[:, :1] if i_block + 1 == n_blocks else x, x)
+            x = block['attention'](x[:, :1] if i_block + 1 == n_blocks else x, x)  # Multi-head self attention
             x = block['attention_residual_dropout'](x)
             x = x_identity + x
 
             x_identity = x
             x = block['ffn_normalization'](x)
-            x = block['ffn'](x)
+            x = block['ffn'](x)  # forward feedback network
             x = block['ffn_residual_dropout'](x)
             x = x_identity + x
 
@@ -876,9 +876,9 @@ class FTTransformer(nn.Module):
         zero_wd_group: Dict[str, Any] = {
             'params': set(
                 itertools.chain(
-                    get_parameters(self.cls_embedding),
-                    get_parameters(self.cont_embeddings),
-                    get_parameters(self.cat_embeddings),
+                    get_parameters(self.cls_embedding),    # CLS embedding (random)
+                    get_parameters(self.cont_embeddings),  # Linear embedding
+                    get_parameters(self.cat_embeddings),   # Categorical embedding
                     itertools.chain.from_iterable(
                         m.parameters()
                         for block in self.backbone.blocks

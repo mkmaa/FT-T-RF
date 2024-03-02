@@ -19,17 +19,13 @@ from tqdm.std import tqdm
 import argparse
 
 warnings.resetwarnings()
-from rtdl_revisiting_models import MLP, ResNet, FTTransformer
-
-from adult import Adult
-from catboost.datasets import higgs, epsilon
+from rtdl_revisiting_models import FTTransformer
 
 TaskType = Literal["regression", "binclass", "multiclass"]
 
 def main(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Set random seeds in all libraries.
-    # np.random.seed(0)
     delu.random.seed(0)
 
     # >>> Dataset.
@@ -40,18 +36,6 @@ def main(args):
         dataset = sklearn.datasets.fetch_california_housing() # CA regression
         task_type: TaskType = 'regression'
         n_classes = None
-    # elif args.dataset == 'AD':
-    #     dataset = Adult(root="datasets", download=True) # AD binclass
-    #     task_type: TaskType = 'binclass'
-    #     n_classes = 2
-    # elif args.dataset == 'HI':
-    #     dataset = higgs() # HI binclass
-    #     task_type: TaskType = 'binclass'
-    #     n_classes = 2
-    # elif args.dataset == 'EP':
-    #     dataset = epsilon() # EP binclass
-    #     task_type: TaskType = 'binclass'
-    #     n_classes = 2
     elif args.dataset == 'CO':
         dataset = sklearn.datasets.fetch_covtype() # CO multiclass 7
         task_type: TaskType = 'multiclass'
@@ -81,9 +65,6 @@ def main(args):
     X_cont: np.ndarray = dataset["data"]
     Y: np.ndarray = dataset["target"]
     
-    # unique_Y = np.sort(np.unique(Y))
-    # Y = np.searchsorted(unique_Y, Y)
-    
     # NOTE: uncomment to solve a classification task.
     # if (task_type != 'regression'):
     #     assert n_classes != None and n_classes >= 2
@@ -96,14 +77,17 @@ def main(args):
     #         n_redundant=2,
     #     )
     
-    # n_samples = X_cont.shape[0]
-    # indices = np.random.permutation(n_samples)
-    # X_cont = X_cont[indices]
-    # Y = Y[indices]
-
-    # if n_samples > 20000:
-    #     X_cont = X_cont[:20000]
-    #     Y = Y[:20000]
+    if args.dataset == 'CO':
+        unique_Y = np.sort(np.unique(Y))
+        Y = np.searchsorted(unique_Y, Y)
+        
+        n_samples = X_cont.shape[0]
+        indices = np.random.permutation(n_samples)
+        X_cont = X_cont[indices]
+        Y = Y[indices]
+        if n_samples > 20000:
+            X_cont = X_cont[:20000]
+            Y = Y[:20000]
 
     # >>> Continuous features.
     X_cont: np.ndarray = X_cont.astype(np.float32)
@@ -202,31 +186,6 @@ def main(args):
     # The output size.
     d_out = n_classes if task_type == "multiclass" else 1
 
-    # print('n_feature: ', n_cont_features, 'cat_card: ', cat_cardinalities, 'd_out: ', d_out)
-
-    # # NOTE: uncomment to train MLP
-    # model = MLP(
-    #     d_in=n_cont_features + sum(cat_cardinalities),
-    #     d_out=d_out,
-    #     n_blocks=2,
-    #     d_block=384,
-    #     dropout=0.1,
-    # ).to(device)
-    # optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=1e-5)
-
-    # # NOTE: uncomment to train ResNet
-    # model = ResNet(
-    #     d_in=n_cont_features + sum(cat_cardinalities),
-    #     d_out=d_out,
-    #     n_blocks=2,
-    #     d_block=192,
-    #     d_hidden=None,
-    #     d_hidden_multiplier=2.0,
-    #     dropout1=0.3,
-    #     dropout2=0.0,
-    # ).to(device)
-    # optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=1e-5)
-
     model = FTTransformer(
         FTTargs=args,
         n_cont_features=n_cont_features,
@@ -237,20 +196,8 @@ def main(args):
     optimizer = model.make_default_optimizer()
 
     def apply_model(batch: Dict[str, Tensor]) -> Tensor:
-        if isinstance(model, (MLP, ResNet)):
-            x_cat_ohe = (
-                [
-                    F.one_hot(column, cardinality)
-                    for column, cardinality in zip(batch["x_cat"].T, cat_cardinalities)
-                ]
-                if "x_cat" in batch
-                else []
-            )
-            return model(torch.column_stack([batch["x_cont"]] + x_cat_ohe)).squeeze(-1)
-
-        elif isinstance(model, FTTransformer):
+        if isinstance(model, FTTransformer):
             return model(batch["x_cont"], batch.get("x_cat")).squeeze(-1)
-
         else:
             raise RuntimeError(f"Unknown model type: {type(model)}")
 
@@ -349,7 +296,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
     parser.add_argument('--dataset', type=str, choices=['CA', 'CO', 'KD', 'RC', 'NE', 'LF', 'DI'], help='dataset')
-    parser.add_argument('--rf', type=str, choices=['True', 'False'], help='random feature')
+    parser.add_argument('--rf_in', type=str, choices=['True', 'False'], help='inner random feature, replace feature tokenizer')
+    parser.add_argument('--rf_out', type=str, choices=['True', 'False'], help='outler random feature, work with feature tokenizer')
     parser.add_argument('--bias', type=str, choices=['True', 'False'], help='bias, only in uniform init')
     parser.add_argument('--activation', type=str, default='ReGLU', choices=['ReGLU', 'ReLU'], help='ReGLU or ReLU')
     parser.add_argument('--init', type=str, choices=['xavier_uniform', 'xavier_normal', 'kaiming_uniform', 'kaiming_normal'], help='Xavier or Kaiming, uniform or normal')
@@ -360,7 +308,5 @@ if __name__ == "__main__":
     if args.init == 'kaiming_uniform' or 'kaiming_normal':
         if args.fan == None:
             raise AssertionError('please input fan mode')
-    else:
-        args.fan = None
     
     main(args)
