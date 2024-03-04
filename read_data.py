@@ -2,6 +2,7 @@ import os
 import dataclasses as dc
 import typing as ty
 import json
+import argparse
 import numpy as np
 import sklearn.preprocessing as skp
 from copy import deepcopy
@@ -181,3 +182,33 @@ def read_dataset(args):
     )
     Y, y_info = D.build_y()
     return D, N, C, Y, y_info
+
+def read_XTab_dataset(dataset):
+    args = argparse.Namespace(
+        dataset=dataset, 
+        normalization='standard', 
+        num_nan_policy='mean', 
+        cat_nan_policy='most_frequent', 
+        cat_policy='onehot',
+        seed=0
+    )
+    D, N, C, Y, y_info = read_dataset(args=args)
+    N_tot = np.vstack((N['train'], N['val'], N['test'])) if N is not None else None
+    C_tot = np.vstack((C['train'], C['val'], C['test'])) if C is not None else None
+    if N_tot is None and C_tot is None:
+        raise AssertionError('X_tot is None')
+    elif N_tot is None:
+        X_tot = C_tot
+    elif C_tot is None:
+        X_tot = N_tot
+    else:
+        X_tot = np.hstack((N_tot, C_tot))
+    Y_tot = np.hstack((Y['train'], Y['val'], Y['test']))
+    # X_tot.astype(np.float32)
+    # Y_tot.astype(np.float32)
+    # print('X_tot', X_tot)
+    # print('Y_tot', Y_tot)
+    if X_tot.shape[0] != Y_tot.shape[0]:
+        raise AssertionError('the shape of X_tot and Y_tot are different')
+    n_feature = X_tot.shape[0]
+    return X_tot, Y_tot, n_feature

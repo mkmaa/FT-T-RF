@@ -34,84 +34,7 @@ def main(args):
     D, N, C, Y, y_info = read_dataset(args)
 
     task_type: TaskType = D.info['task_type']
-    n_classes = None
-    
-    # if args.dataset == 'CA':
-    #     dataset = sklearn.datasets.fetch_california_housing() # CA regression
-    #     task_type: TaskType = 'regression'
-    #     n_classes = None
-    # elif args.dataset == 'CO':
-    #     dataset = sklearn.datasets.fetch_covtype() # CO multiclass 7
-    #     task_type: TaskType = 'multiclass'
-    #     n_classes = 7
-    # elif args.dataset == 'KD':
-    #     dataset = sklearn.datasets.fetch_kddcup99() # KD multiclass 23
-    #     task_type: TaskType = 'multiclass'
-    #     n_classes = 23
-    # elif args.dataset == 'RC':
-    #     dataset = sklearn.datasets.fetch_rcv1() # RC multiclass 103
-    #     task_type: TaskType = 'multiclass'
-    #     n_classes = 103
-    # elif args.dataset == 'NE':
-    #     dataset = sklearn.datasets.fetch_20newsgroups_vectorized() # NE multiclass 20
-    #     task_type: TaskType = 'multiclass'
-    #     n_classes = 20
-    # elif args.dataset == 'LF':
-    #     dataset = sklearn.datasets.fetch_lfw_pairs() # LF binclass
-    #     task_type: TaskType = 'binclass'
-    #     n_classes = 2
-    # elif args.dataset == 'DI':
-    #     dataset = sklearn.datasets.load_diabetes() # DI regression
-    #     task_type: TaskType = 'regression'
-    #     n_classes = None
-    # else:
-    #     AssertionError()
-    # X_cont: np.ndarray = dataset["data"]
-    # Y: np.ndarray = dataset["target"]
-    
-    # NOTE: uncomment to solve a classification task.
-    # if (task_type != 'regression'):
-    #     assert n_classes != None and n_classes >= 2
-    #     task_type: TaskType = 'binclass' if n_classes == 2 else 'multiclass'
-    #     X_cont, Y = sklearn.datasets.make_classification(
-    #         n_samples=20000,
-    #         n_features=8,
-    #         n_classes=n_classes,
-    #         n_informative=6,
-    #         n_redundant=2,
-    #     )
-    
-    # if args.dataset == 'CO':
-    #     unique_Y = np.sort(np.unique(Y))
-    #     Y = np.searchsorted(unique_Y, Y)
-        
-    #     n_samples = X_cont.shape[0]
-    #     indices = np.random.permutation(n_samples)
-    #     X_cont = X_cont[indices]
-    #     Y = Y[indices]
-    #     if n_samples > 20000:
-    #         X_cont = X_cont[:20000]
-    #         Y = Y[:20000]
-
-    # >>> Continuous features.
-    # X_cont: np.ndarray = X_cont.astype(np.float32)
-    # n_cont_features = X_cont.shape[1]
-
-    # >>> Categorical features.
-    # NOTE: the above datasets do not have categorical features, but,
-    # for the demonstration purposes, it is possible to generate them.
-    # cat_cardinalities = [
-    #     # NOTE: uncomment the two lines below to add two categorical features.
-    #     # 4,  # Allowed values: [0, 1, 2, 3].
-    #     # 7,  # Allowed values: [0, 1, 2, 3, 4, 5, 6].
-    # ]
-    # X_cat = (
-    #     np.column_stack(
-    #         [np.random.randint(0, c, (len(X_cont),)) for c in cat_cardinalities]
-    #     )
-    #     if cat_cardinalities
-    #     else None
-    # )
+    n_classes = D.info['n_classes']
 
     # >>> Labels.
     # Regression labels must be represented by float32.
@@ -145,15 +68,7 @@ def main(args):
     # test_idx = len(N['test']) + len(C['test'])
         
     # >>> Feature preprocessing.
-    # NOTE
-    # The choice between preprocessing strategies depends on a task and a model.
-
-    # (A) Simple preprocessing strategy.
-    # preprocessing = sklearn.preprocessing.StandardScaler().fit(
-    #     data_numpy['train']['x_cont']
-    # )
-
-    # (B) Fancy preprocessing strategy.
+    # Fancy preprocessing strategy.
     # The noise is added to improve the output of QuantileTransformer in some cases.
     X_cont_train_numpy = data_numpy["train"]["x_cont"]
     noise = (
@@ -207,7 +122,6 @@ def main(args):
         else:
             raise RuntimeError(f"Unknown model type: {type(model)}")
 
-
     loss_fn = (
         F.binary_cross_entropy_with_logits
         if task_type == "binclass"
@@ -215,7 +129,6 @@ def main(args):
         if task_type == "multiclass"
         else F.mse_loss
     )
-
 
     @torch.no_grad()
     def evaluate(part: str) -> float:
