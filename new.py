@@ -10,27 +10,25 @@ from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
 class RandomFeature(nn.Module):
     def __init__(self, n_features: int, d_embedding: int = 65536, n_dims: int = 384):
         super(RandomFeature, self).__init__()
-        # self.weight = nn.Parameter(torch.empty(n_features, d_embedding))
-        # self.bias = nn.Parameter(torch.empty(n_features, d_embedding))
-        # nn.init.kaiming_normal_(self.weight, 0, 'fan_out', 'relu')
-        # nn.init.zeros_(self.bias)
         self.d_embedding = d_embedding
         self.n_dims = n_dims
         self.clip_data_value = 27.6041
-
-    def forward(self, x: torch.Tensor):
-        x = x.flatten(start_dim=1)
-        rf_linear = nn.Linear(x.shape[1], self.d_embedding, bias=True, dtype=torch.float32) # random feature
+        
+        rf_linear = nn.Linear(n_features, self.d_embedding, bias=True, dtype=torch.float32) # random feature
         nn.init.kaiming_normal_(rf_linear.weight, mode="fan_out", nonlinearity="relu")
         nn.init.zeros_(rf_linear.bias)
         rf_linear.weight.requires_grad = False
         rf_linear.bias.requires_grad = False
-        rf = nn.Sequential(rf_linear, nn.ReLU()).to(x.device)
-        with torch.no_grad():
-            x = rf(x)
+        self.rf = nn.Sequential(rf_linear, nn.ReLU())
         self.pca = PCA(n_components=self.n_dims)
+
+    def forward(self, x: torch.Tensor):
+        x = x.flatten(start_dim=1)
+        with torch.no_grad():
+            x = self.rf(x)
         x = torch.from_numpy(self.pca.fit_transform(x.cpu().numpy())).to(x.device)
         x = torch.clamp(x, -self.clip_data_value, self.clip_data_value)
+        return x
 
 class ContrastiveHead(nn.Module):
     def __init__(self, d_in: int = 384, d_out: int = 384, bias: bool = True):
@@ -76,16 +74,15 @@ class Model(nn.Module):
         self.contrastive = nn.ModuleList([ContrastiveHead() for _ in range(num_datasets)])
         self.supervised = nn.ModuleList([SupervisedHead() for _ in range(num_datasets)])
 
-    def forward(self, datasets):
+    def forward(self, x):
         contrast = []
         prediction = []
         for i in range(self.num_datasets):
-            print('data =', datasets[i])
-            rf = self.rf[i](datasets[i])
-            print('rf =', rf)
-            output = self.backbone(rf)
-            contrast.append(self.contrastive[i](output))
-            prediction.append(self.supervised[i](output))
+            x[i] = self.rf[i](x[i])
+            print('rf =', x[i].shape)
+            x[i] = self.backbone(x[i])
+            contrast.append(self.contrastive[i](x[i]))
+            prediction.append(self.supervised[i](x[i]))
         return contrast, prediction
         
 def train(args):

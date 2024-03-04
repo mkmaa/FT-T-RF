@@ -210,5 +210,5 @@ def read_XTab_dataset(dataset):
     # print('Y_tot', Y_tot)
     if X_tot.shape[0] != Y_tot.shape[0]:
         raise AssertionError('the shape of X_tot and Y_tot are different')
-    n_feature = X_tot.shape[0]
+    n_feature = X_tot.shape[1]
     return X_tot, Y_tot, n_feature
