@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import argparse
 from sklearn.decomposition import PCA
+import copy
 
 from read_data import read_XTab_dataset
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
@@ -28,10 +29,11 @@ class RandomFeature(nn.Module):
             x = self.rf(x)
         x = torch.from_numpy(self.pca.fit_transform(x.cpu().numpy())).to(x.device)
         x = torch.clamp(x, -self.clip_data_value, self.clip_data_value)
+        x = x.unsqueeze(1)
         return x
 
 class ContrastiveHead(nn.Module):
-    def __init__(self, d_in: int = 384, d_out: int = 384, bias: bool = True):
+    def __init__(self, d_in: int = 384, d_out: int = 5, bias: bool = True):
         super(ContrastiveHead, self).__init__()
         self.normalization = nn.LayerNorm(d_in)
         self.activation = nn.ReLU()
@@ -39,7 +41,7 @@ class ContrastiveHead(nn.Module):
         self.linear2 = nn.Linear(d_in, d_out, bias)
 
     def forward(self, x):
-        x = x[:, :-1]
+        # x = x[:, :-1]
         x = self.linear1(x)
         x = self.normalization(x)
         x = self.activation(x)
@@ -55,7 +57,7 @@ class SupervisedHead(nn.Module):
         self.linear2 = nn.Linear(d_in, d_out, bias)
 
     def forward(self, x):
-        x = x[:, -1]
+        # x = x[:, -1]
         x = self.linear1(x)
         x = self.normalization(x)
         x = self.activation(x)
@@ -67,52 +69,61 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.num_datasets = num_datasets
         self.rf = nn.ModuleList([RandomFeature(n_features[i]) for i in range(num_datasets)])
-        kwargs = FTTransformer.get_default_kwargs(n_blocks=3)
+        kwargs = FTTransformer.get_default_kwargs(n_blocks=6)
         del kwargs['_is_default']
-        kwargs['d_out'] = 1 # when multiclass, should be set to n_classes
+        kwargs['d_out'] = None # 1, or when multiclass, should be set to n_classes
         self.backbone = FTTransformerBackbone(**kwargs)
         self.contrastive = nn.ModuleList([ContrastiveHead() for _ in range(num_datasets)])
         self.supervised = nn.ModuleList([SupervisedHead() for _ in range(num_datasets)])
 
-    def forward(self, x):
-        contrast = []
-        prediction = []
+    def forward(self, x: dict[torch.Tensor]):
+        contrast: list[torch.Tensor] = []
+        prediction: list[torch.Tensor] = []
         for i in range(self.num_datasets):
             x[i] = self.rf[i](x[i])
-            print('rf =', x[i].shape)
+            # print('rf =', x[i].shape)
             x[i] = self.backbone(x[i])
+            # print('backbone =', x[i].shape)
             contrast.append(self.contrastive[i](x[i]))
             prediction.append(self.supervised[i](x[i]))
         return contrast, prediction
         
 def train(args):
     num_datasets = 1
-    X_tot, Y_tot, n_feature = read_XTab_dataset('r1')
-    X_tot = torch.from_numpy(X_tot).float()
-    Y_tot = torch.from_numpy(Y_tot).float()
-    dataX = [X_tot]  # Load your datasets
-    dataY = [Y_tot]
-    n_features = [n_feature]
+    X_1, Y_1, n_1 = read_XTab_dataset('r1')
+    X_1 = torch.from_numpy(X_1).float()
+    Y_1 = torch.from_numpy(Y_1).float()
+    dataX = [X_1]  # Load your datasets
+    dataY = [Y_1]
+    n_features = [n_1]
     model = Model(num_datasets, n_features)
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.0001)
     criterion = nn.MSELoss()
     model.train()
-    for epoch in range(100):
-        # Zero the gradients
+    for epoch in range(10):
         optimizer.zero_grad()
-
-        # Forward pass
-        contrast, prediction = model(dataX)
-
-        # Calculate loss
+        
+        data = copy.deepcopy(dataX)
+        contrast, prediction = model(data)
+        
+        for i in range(num_datasets):
+            prediction[i] = prediction[i].squeeze(dim=1)
+        
+        # print('contrast =', contrast[0].shape)
+        # print('prediction =', prediction[0].shape)
+        # print('dataX =', dataX[0].shape)
+        # print('dataY =', dataY[0].shape)
+        
         contrastive_loss = sum(criterion(contrast[i], dataX[i]) for i in range(num_datasets))
         supervised_loss = sum(criterion(prediction[i], dataY[i]) for i in range(num_datasets))
-        total_loss = contrastive_loss + supervised_loss
+        total_loss = contrastive_loss + 2*supervised_loss
+        
+        print('epoch =', epoch)
+        print('contr loss =', contrastive_loss)
+        print('supvi loss =', supervised_loss)
+        print('total loss =', total_loss)
 
-        # Backward pass
         total_loss.backward()
-
-        # Update the weights
         optimizer.step()
     torch.save(model.backbone.state_dict(), 'checkpoints/backbone.pth')
         
