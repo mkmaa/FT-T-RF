@@ -9,7 +9,7 @@ from read_data import read_XTab_dataset
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
 
 class RandomFeature(nn.Module):
-    def __init__(self, n_features: int, d_embedding: int = 65536, n_dims: int = 384):
+    def __init__(self, n_features: int, d_embedding: int, n_dims: int):
         super(RandomFeature, self).__init__()
         self.d_embedding = d_embedding
         self.n_dims = n_dims
@@ -33,7 +33,7 @@ class RandomFeature(nn.Module):
         return x
 
 class ContrastiveHead(nn.Module):
-    def __init__(self, d_in: int = 384, d_out: int = 5, bias: bool = True):
+    def __init__(self, d_in: int, d_out: int, bias: bool = True):
         super(ContrastiveHead, self).__init__()
         self.normalization = nn.LayerNorm(d_in)
         self.activation = nn.ReLU()
@@ -49,7 +49,7 @@ class ContrastiveHead(nn.Module):
         return x
 
 class SupervisedHead(nn.Module):
-    def __init__(self, d_in: int = 384, d_out: int = 1, bias: bool = True):
+    def __init__(self, d_in: int, d_out: int, bias: bool = True):
         super(SupervisedHead, self).__init__()
         self.normalization = nn.LayerNorm(d_in)
         self.activation = nn.ReLU()
@@ -68,13 +68,13 @@ class Model(nn.Module):
     def __init__(self, num_datasets, n_features):
         super(Model, self).__init__()
         self.num_datasets = num_datasets
-        self.rf = nn.ModuleList([RandomFeature(n_features[i]) for i in range(num_datasets)])
+        self.rf = nn.ModuleList([RandomFeature(n_features=n_features[i], d_embedding=65536, n_dims=384) for i in range(num_datasets)])
         kwargs = FTTransformer.get_default_kwargs(n_blocks=6)
         del kwargs['_is_default']
         kwargs['d_out'] = None # 1, or when multiclass, should be set to n_classes
         self.backbone = FTTransformerBackbone(**kwargs)
-        self.contrastive = nn.ModuleList([ContrastiveHead() for _ in range(num_datasets)])
-        self.supervised = nn.ModuleList([SupervisedHead() for _ in range(num_datasets)])
+        self.contrastive = nn.ModuleList([ContrastiveHead(d_in=384, d_out=n_features[i]) for i in range(num_datasets)])
+        self.supervised = nn.ModuleList([SupervisedHead(d_in=384, d_out=1) for i in range(num_datasets)])
 
     def forward(self, x: dict[torch.Tensor]):
         contrast: list[torch.Tensor] = []
@@ -89,13 +89,12 @@ class Model(nn.Module):
         return contrast, prediction
         
 def train(args):
-    num_datasets = 1
+    num_datasets = 2
     X_1, Y_1, n_1 = read_XTab_dataset('r1')
-    X_1 = torch.from_numpy(X_1).float()
-    Y_1 = torch.from_numpy(Y_1).float()
-    dataX = [X_1]  # Load your datasets
-    dataY = [Y_1]
-    n_features = [n_1]
+    X_2, Y_2, n_2 = read_XTab_dataset('r2')
+    dataX = [X_1, X_2]  # Load your datasets
+    dataY = [Y_1, Y_2]
+    n_features = [n_1, n_2]
     model = Model(num_datasets, n_features)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
     criterion = nn.MSELoss()
@@ -164,4 +163,4 @@ if __name__ == "__main__":
     #         raise AssertionError('please input fan mode')
     
     train(args)
-    test(args)
+    # test(args)

@@ -10,6 +10,8 @@ from pathlib import Path
 from sklearn.impute import SimpleImputer
 from scipy.stats import mode
 
+import torch
+
 BINCLASS = 'binclass'
 MULTICLASS = 'multiclass'
 REGRESSION = 'regression'
@@ -211,4 +213,6 @@ def read_XTab_dataset(dataset):
     if X_tot.shape[0] != Y_tot.shape[0]:
         raise AssertionError('the shape of X_tot and Y_tot are different')
     n_feature = X_tot.shape[1]
+    X_tot = torch.from_numpy(X_tot).float()
+    Y_tot = torch.from_numpy(Y_tot).float()
     return X_tot, Y_tot, n_feature
