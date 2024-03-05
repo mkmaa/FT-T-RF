@@ -637,7 +637,7 @@ class FTTransformerBackbone(nn.Module):
             linformer_kv_compression_sharing: the argument for `MultiheadAttention`.
         """  # noqa: E501
         # ffn_activation = args.activation
-        print('Using activation', ffn_activation)
+        # print('Using activation', ffn_activation)
         if ffn_activation not in typing.get_args(_TransformerFFNActivation):
             raise ValueError(
                 'ffn_activation must be one of'

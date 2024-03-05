@@ -89,22 +89,30 @@ class Model(nn.Module):
         return contrast, prediction
         
 def train(args):
-    num_datasets = 2
-    X_1, Y_1, n_1 = read_XTab_dataset('r1')
-    X_2, Y_2, n_2 = read_XTab_dataset('r2')
-    dataX = [X_1, X_2]  # Load your datasets
-    dataY = [Y_1, Y_2]
-    n_features = [n_1, n_2]
+    dataX: list[torch.Tensor] = []
+    dataY: list[torch.Tensor] = []
+    n_features: list[int] = []
+    for dataset in args.training_dataset:
+        X, Y, n = read_XTab_dataset(dataset)
+        dataX.append(X)
+        dataY.append(Y)
+        n_features.append(n)
+    if len(n_features) != len(dataX) or len(n_features) != len(dataY):
+        raise AssertionError('the size of data are different')
+    num_datasets: int = len(n_features)
+    
     model = Model(num_datasets, n_features)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
     criterion = nn.MSELoss()
+    
     model.train()
     for epoch in range(10):
         optimizer.zero_grad()
-        
         data = copy.deepcopy(dataX)
-        contrast, prediction = model(data)
         
+        contrast: list[torch.Tensor]
+        prediction: list[torch.Tensor]
+        contrast, prediction = model(data)
         for i in range(num_datasets):
             prediction[i] = prediction[i].squeeze(dim=1)
         
@@ -118,33 +126,38 @@ def train(args):
         total_loss = contrastive_loss + 2*supervised_loss
         
         print('epoch =', epoch)
-        print('contr loss =', contrastive_loss)
-        print('supvi loss =', supervised_loss)
-        print('total loss =', total_loss)
+        print('| contr loss =', contrastive_loss)
+        print('| supvi loss =', supervised_loss)
+        print('| total loss =', total_loss)
 
         total_loss.backward()
         optimizer.step()
-    torch.save(model.backbone.state_dict(), 'checkpoints/backbone.pth')
+    torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
+    # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
         
 def test(args):
-    # 初始化新的模型
-    test_model = Model(num_datasets=1)  # 假设你有一个支持集
-
-    # 加载主网络的权重
-    test_model.backbone.load_state_dict(torch.load('checkpoints/backbone.pth'))
-
-    # 将模型设置为评估模式
-    test_model.eval()
-
-    # 加载支持集
-    support_set = [...]  # 加载你的支持集
-
-    # 使用新的编码器和解码器，复用主网络的参数，进行前向传播
-    decoded = test_model(support_set)
-    
+    X, Y, n = read_XTab_dataset('r1')
+    test_model = Model(num_datasets=1, n_features=[n])
+    optimizer = optim.Adam(test_model.parameters(), lr=0.0001)
     criterion = nn.MSELoss()
-    loss = criterion(decoded[0], support_set[0])
-    print('loss =', loss)
+    
+    test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
+
+    test_model.train()
+    for epoch in range(10):
+        optimizer.zero_grad()
+        data = copy.deepcopy([X])
+        
+        prediction: list[torch.Tensor]
+        _, prediction = test_model(data)
+        prediction[0] = prediction[0].squeeze(dim=1)
+        loss = criterion(prediction[0], Y)
+        
+        print('epoch =', epoch)
+        print('| supvi loss =', loss)
+
+        loss.backward()
+        optimizer.step()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
@@ -161,6 +174,8 @@ if __name__ == "__main__":
     # if args.init == 'kaiming_uniform' or 'kaiming_normal':
     #     if args.fan == None:
     #         raise AssertionError('please input fan mode')
+    
+    args.training_dataset = ['r1', 'r2', 'r35']
     
     train(args)
     # test(args)
