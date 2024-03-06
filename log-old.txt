@@ -613,3 +613,94 @@ Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier
 
 Namespace(dataset='CA', rf='True', bias='True', activation='ReGLU', init='xavier_uniform', fan=None)
 {'val': -0.5100753027895347, 'test': -0.5183965099122712, 'epoch': 92}  // n = 20 --pca-> 10  192 ------> 384  25min
+
+full dataset:
+
+    args.training_dataset = ['abalone','Abalone_Dataset','accelerometer','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','auction_verification','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c132','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','Click_prediction_small','combined_cycle_power_plant','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','concrete_compressive_strength','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','default_of_credit_card_clients','delta_elevators','diabetic_retinopathy_debrecen','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Employee','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','garments_worker_productivity','Gas_Turbine','gas_turbine_CO_and_NOx_emission','Gender_Gap_in_Spanish_WP','Geographical_Original_of_Music','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','internet_firewall','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','magic_gamma_telescope','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','online_news_popularity','optical_recognition_of_handwritten_digits','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','predict_students_dropout_and_academic_success','productivity_prediction','Product_Classification_and_Clustering','profb','qsar_aquatic_toxicity','QSAR_biodegradation','qsar_fish_toxicity','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','SGEMM_GPU_kernel_performance','Shop_Customer_Data','Smoking_and_Drinking_Dataset_with_body_signal','socmob','space_ga','spambase','statlog','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','student_performance','superconductivity','Superconductivty','support2','synchronous_machine','taiwanese_bankruptcy_prediction','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','Water_Quality_and_Potability','Waveform_Database_Generator_Version_1','wave_energy_farm','Website_Phishing','wine_quality','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','YearPredictionMSD','year_prediction_MSD','yeast']
+
+    dismissed:
+        accelerometer
+        auction_verification
+        c132
+        Click_prediction_small
+        combined_cycle_power_plant
+        concrete_compressive_strength
+        default_of_credit_card_clients
+        diabetic_retinopathy_debrecen
+        Employee
+        garments_worker_productivity
+        Gas_Turbine
+        gas_turbine_CO_and_NOx_emission
+        Geographical_Original_of_Music
+        internet_firewall
+        magic_gamma_telescope
+        online_news_popularity
+        optical_recognition_of_handwritten_digits
+        predict_students_dropout_and_academic_success
+        Product_Classification_and_Clustering
+        profb
+        qsar_fish_toxicity
+        SGEMM_GPU_kernel_performance
+        Shop_Customer_Data
+        socmob
+        space_ga
+        spambase
+        statlog
+        student_performance
+        support2
+        taiwanese_bankruptcy_prediction
+        Water_Quality_and_Potability
+        Waveform_Database_Generator_Version_1
+        wine_quality
+        YearPredictionMSD
+        year_prediction_MSD
+
+49 datasets loaded, 46441 samples in total.
+epoch = 0
+| contr loss = tensor(48.6273, grad_fn=<AddBackward0>)
+| supvi loss = tensor(56.4193, grad_fn=<AddBackward0>)
+| total loss = tensor(105.0466, grad_fn=<AddBackward0>)
+epoch = 1
+| contr loss = tensor(46.8440, grad_fn=<AddBackward0>)
+| supvi loss = tensor(49.0320, grad_fn=<AddBackward0>)
+| total loss = tensor(95.8761, grad_fn=<AddBackward0>)
+epoch = 2
+| contr loss = tensor(44.9814, grad_fn=<AddBackward0>)
+| supvi loss = tensor(43.3670, grad_fn=<AddBackward0>)
+| total loss = tensor(88.3484, grad_fn=<AddBackward0>)
+epoch = 3
+| contr loss = tensor(43.2386, grad_fn=<AddBackward0>)
+| supvi loss = tensor(39.0524, grad_fn=<AddBackward0>)
+| total loss = tensor(82.2910, grad_fn=<AddBackward0>)
+epoch = 4
+| contr loss = tensor(41.4302, grad_fn=<AddBackward0>)
+| supvi loss = tensor(35.5520, grad_fn=<AddBackward0>)
+| total loss = tensor(76.9823, grad_fn=<AddBackward0>)
+epoch = 5
+| contr loss = tensor(39.5594, grad_fn=<AddBackward0>)
+| supvi loss = tensor(33.0404, grad_fn=<AddBackward0>)
+| total loss = tensor(72.5998, grad_fn=<AddBackward0>)
+epoch = 6
+| contr loss = tensor(37.7472, grad_fn=<AddBackward0>)
+| supvi loss = tensor(31.5544, grad_fn=<AddBackward0>)
+| total loss = tensor(69.3016, grad_fn=<AddBackward0>)
+epoch = 7
+| contr loss = tensor(36.0168, grad_fn=<AddBackward0>)
+| supvi loss = tensor(30.0325, grad_fn=<AddBackward0>)
+| total loss = tensor(66.0493, grad_fn=<AddBackward0>)
+epoch = 8
+| contr loss = tensor(34.4257, grad_fn=<AddBackward0>)
+| supvi loss = tensor(29.2354, grad_fn=<AddBackward0>)
+| total loss = tensor(63.6611, grad_fn=<AddBackward0>)
+epoch = 9
+| contr loss = tensor(33.0315, grad_fn=<AddBackward0>)
+| supvi loss = tensor(28.5934, grad_fn=<AddBackward0>)
+| total loss = tensor(61.6249, grad_fn=<AddBackward0>)
+
+pretrained
+best = tensor(0.4482, grad_fn=<MseLossBackward0>)
+epoch = 29
+
+without pretraining
+best = tensor(0.4335, grad_fn=<MseLossBackward0>)
+epoch = 27

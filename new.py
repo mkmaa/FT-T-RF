@@ -92,14 +92,22 @@ def train(args):
     dataX: list[torch.Tensor] = []
     dataY: list[torch.Tensor] = []
     n_features: list[int] = []
+    n_samples: int = 0
     for dataset in args.training_dataset:
-        X, Y, n = read_XTab_dataset(dataset)
-        dataX.append(X)
-        dataY.append(Y)
-        n_features.append(n)
+        print('Loading dataset', dataset, '...')
+        task_type, X, Y, n = read_XTab_dataset(dataset)
+        if task_type == 'regression':
+            dataX.append(X)
+            dataY.append(Y)
+            n_features.append(n)
+            n_samples += X.shape[0]
+            print('| Loaded,', X.shape[0], 'samples,', X.shape[1], 'features.')
+        else:
+            print('| Skipped.')
     if len(n_features) != len(dataX) or len(n_features) != len(dataY):
         raise AssertionError('the size of data are different')
     num_datasets: int = len(n_features)
+    print(num_datasets, 'datasets loaded,', n_samples, 'samples in total.')
     
     model = Model(num_datasets, n_features)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
@@ -123,7 +131,7 @@ def train(args):
         
         contrastive_loss = sum(criterion(contrast[i], dataX[i]) for i in range(num_datasets))
         supervised_loss = sum(criterion(prediction[i], dataY[i]) for i in range(num_datasets))
-        total_loss = contrastive_loss + 2*supervised_loss
+        total_loss = contrastive_loss + supervised_loss
         
         print('epoch =', epoch)
         print('| contr loss =', contrastive_loss)
@@ -136,15 +144,20 @@ def train(args):
     # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
         
 def test(args):
-    X, Y, n = read_XTab_dataset('r1')
+    task_type, X, Y, n = read_XTab_dataset('abalone')
+    if task_type != 'regression':
+        raise AssertionError('not regression')
+    
     test_model = Model(num_datasets=1, n_features=[n])
     optimizer = optim.Adam(test_model.parameters(), lr=0.0001)
     criterion = nn.MSELoss()
     
-    test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
+    # test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
 
     test_model.train()
-    for epoch in range(10):
+    best_loss = None
+    best_epoch = None
+    for epoch in range(30):
         optimizer.zero_grad()
         data = copy.deepcopy([X])
         
@@ -152,12 +165,17 @@ def test(args):
         _, prediction = test_model(data)
         prediction[0] = prediction[0].squeeze(dim=1)
         loss = criterion(prediction[0], Y)
+        if best_loss is None or loss < best_loss:
+            best_loss = loss
+            best_epoch = epoch
         
         print('epoch =', epoch)
         print('| supvi loss =', loss)
 
         loss.backward()
         optimizer.step()
+    print('best =', best_loss)
+    print('epoch =', best_epoch)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
@@ -175,7 +193,9 @@ if __name__ == "__main__":
     #     if args.fan == None:
     #         raise AssertionError('please input fan mode')
     
-    args.training_dataset = ['r1', 'r2', 'r35']
+    args.training_dataset = [
+    'abalone','Abalone_Dataset','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','delta_elevators','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','Gender_Gap_in_Spanish_WP','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','productivity_prediction','qsar_aquatic_toxicity','QSAR_biodegradation','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','Smoking_and_Drinking_Dataset_with_body_signal','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','superconductivity','Superconductivty','synchronous_machine','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','wave_energy_farm','Website_Phishing','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','yeast'
+    ]
     
-    train(args)
-    # test(args)
+    # train(args)
+    test(args)

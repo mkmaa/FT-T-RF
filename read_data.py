@@ -187,7 +187,7 @@ def read_dataset(args):
 
 def read_XTab_dataset(dataset):
     args = argparse.Namespace(
-        dataset=dataset, 
+        dataset='C:\\Users\\31604\\Desktop\\Scientific Training in LAMDA\\Projects\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
         normalization='standard', 
         num_nan_policy='mean', 
         cat_nan_policy='most_frequent', 
@@ -215,4 +215,4 @@ def read_XTab_dataset(dataset):
     n_feature = X_tot.shape[1]
     X_tot = torch.from_numpy(X_tot).float()
     Y_tot = torch.from_numpy(Y_tot).float()
-    return X_tot, Y_tot, n_feature
+    return D.info['task_type'], X_tot[:1000], Y_tot[:1000], n_feature
