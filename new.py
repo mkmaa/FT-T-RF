@@ -4,6 +4,7 @@ import torch.optim as optim
 import argparse
 from sklearn.decomposition import PCA
 import copy
+from sklearn.metrics import mean_squared_error
 
 from read_data import read_XTab_dataset
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
@@ -148,6 +149,8 @@ def test(args):
     if task_type != 'regression':
         raise AssertionError('not regression')
     
+    # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    
     test_model = Model(num_datasets=1, n_features=[n])
     optimizer = optim.Adam(test_model.parameters(), lr=0.0001)
     criterion = nn.MSELoss()
@@ -155,9 +158,9 @@ def test(args):
     # test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
 
     test_model.train()
-    best_loss = None
+    best_score = None
     best_epoch = None
-    for epoch in range(30):
+    for epoch in range(50):
         optimizer.zero_grad()
         data = copy.deepcopy([X])
         
@@ -165,16 +168,19 @@ def test(args):
         _, prediction = test_model(data)
         prediction[0] = prediction[0].squeeze(dim=1)
         loss = criterion(prediction[0], Y)
-        if best_loss is None or loss < best_loss:
-            best_loss = loss
+        
+        score = -(mean_squared_error(Y.detach().numpy(), prediction[0].detach().numpy()) ** 0.5 * Y.std().item())
+        if best_score is None or score > best_score:
+            best_score = score
             best_epoch = epoch
         
         print('epoch =', epoch)
-        print('| supvi loss =', loss)
+        print('| loss =', loss)
+        print('| score =', score)
 
         loss.backward()
         optimizer.step()
-    print('best =', best_loss)
+    print('best =', best_score)
     print('epoch =', best_epoch)
 
 if __name__ == "__main__":

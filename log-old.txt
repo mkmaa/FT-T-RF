@@ -697,10 +697,13 @@ epoch = 9
 | supvi loss = tensor(28.5934, grad_fn=<AddBackward0>)
 | total loss = tensor(61.6249, grad_fn=<AddBackward0>)
 
-pretrained
-best = tensor(0.4482, grad_fn=<MseLossBackward0>)
-epoch = 29
+FT-T:
+{'val': -0.6458349971339626, 'test': -0.6718980873931742, 'epoch': 46}
 
-without pretraining
-best = tensor(0.4335, grad_fn=<MseLossBackward0>)
-epoch = 27
+FT-T + random feature:
+best = -0.639403656037733
+epoch = 46
+
+FT-T + random feature + pretraining:     --- didn't divide val and test
+best = -0.6254679598082653
+epoch = 49

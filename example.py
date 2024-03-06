@@ -34,7 +34,7 @@ def main(args):
     D, N, C, Y, y_info = read_dataset(args)
 
     task_type: TaskType = D.info['task_type']
-    n_classes = D.info['n_classes']
+    n_classes = 0
 
     # >>> Labels.
     # Regression labels must be represented by float32.
@@ -110,7 +110,7 @@ def main(args):
     model = FTTransformer(
         FTTargs=args,
         n_cont_features=D.info['n_num_features'],
-        cat_cardinalities=D.info['cat_cardinalities'],
+        cat_cardinalities=[2]*C['train'].shape[1],
         d_out=d_out,
         **FTTransformer.get_default_kwargs(n_blocks=args.n_blocks),
     ).to(device)
@@ -214,7 +214,7 @@ def main(args):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
-    parser.add_argument('--dataset', type=str, choices=['CA', 'CO', 'KD', 'RC', 'NE', 'LF', 'DI', 'r1', 'r2'], help='dataset')
+    parser.add_argument('--dataset', type=str, help='dataset')
     parser.add_argument('--rf_in', type=str, choices=['True', 'False'], help='inner random feature, replace feature tokenizer')
     parser.add_argument('--rf_out', type=str, choices=['True', 'False'], help='outler random feature, work with feature tokenizer')
     parser.add_argument('--bias', type=str, choices=['True', 'False'], help='bias, only in uniform init')
@@ -233,5 +233,7 @@ if __name__ == "__main__":
     if args.init == 'kaiming_uniform' or 'kaiming_normal':
         if args.fan == None:
             raise AssertionError('please input fan mode')
+        
+    args.dataset = '..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+args.dataset
     
     main(args)

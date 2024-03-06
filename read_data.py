@@ -187,7 +187,7 @@ def read_dataset(args):
 
 def read_XTab_dataset(dataset):
     args = argparse.Namespace(
-        dataset='C:\\Users\\31604\\Desktop\\Scientific Training in LAMDA\\Projects\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
+        dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
         normalization='standard', 
         num_nan_policy='mean', 
         cat_nan_policy='most_frequent', 
