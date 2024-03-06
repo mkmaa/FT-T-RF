@@ -185,7 +185,7 @@ def read_dataset(args):
     Y, y_info = D.build_y()
     return D, N, C, Y, y_info
 
-def read_XTab_dataset(dataset):
+def read_XTab_dataset_train(dataset):
     args = argparse.Namespace(
         dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
         normalization='standard', 
@@ -216,3 +216,40 @@ def read_XTab_dataset(dataset):
     X_tot = torch.from_numpy(X_tot).float()
     Y_tot = torch.from_numpy(Y_tot).float()
     return D.info['task_type'], X_tot[:1000], Y_tot[:1000], n_feature
+
+def read_XTab_dataset_test(dataset):
+    args = argparse.Namespace(
+        dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
+        normalization='standard', 
+        num_nan_policy='mean', 
+        cat_nan_policy='most_frequent', 
+        cat_policy='onehot',
+        seed=0
+    )
+    D, N, C, Y, y_info = read_dataset(args=args)
+    N_train = N['train']
+    N_test = np.vstack((N['val'], N['test'])) if N is not None else None
+    C_train = C['train']
+    C_test = np.vstack((C['val'], C['test'])) if C is not None else None
+    if N is None and C is None:
+        raise AssertionError('X_tot is None')
+    elif N is None:
+        X_train = C_train
+        X_test = C_test
+    elif C is None:
+        X_train = N_train
+        X_test = N_test
+    else:
+        X_train = np.hstack((N_train, C_train))
+        X_test = np.hstack((N_test, C_test))
+    Y_train = Y['train']
+    Y_test = np.hstack((Y['val'], Y['test']))
+    if X_train.shape[0] != Y_train.shape[0] or X_test.shape[0] != Y_test.shape[0]:
+        raise AssertionError('the shape of X_tot and Y_tot are different')
+    n_feature = X_train.shape[1]
+    n_samples = X_train.shape[0]
+    X_train = torch.from_numpy(X_train).float()
+    X_test = torch.from_numpy(X_test).float()
+    Y_train = torch.from_numpy(Y_train).float()
+    Y_test = torch.from_numpy(Y_test).float()
+    return D.info['task_type'], X_train, X_test, Y_train, Y_test, n_feature
