@@ -227,9 +227,9 @@ def read_XTab_dataset_test(dataset):
         seed=0
     )
     D, N, C, Y, y_info = read_dataset(args=args)
-    N_train = N['train']
+    N_train = N['train'] if N is not None else None
     N_test = np.vstack((N['val'], N['test'])) if N is not None else None
-    C_train = C['train']
+    C_train = C['train'] if C is not None else None
     C_test = np.vstack((C['val'], C['test'])) if C is not None else None
     if N is None and C is None:
         raise AssertionError('X_tot is None')
