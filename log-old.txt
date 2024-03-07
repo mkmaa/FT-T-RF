@@ -679,3 +679,9 @@ epoch = 49
 | supvi loss = tensor(17.5245, grad_fn=<AddBackward0>)
 | total loss = tensor(33.1116, grad_fn=<AddBackward0>)
 | [time] 2:20:38.833049
+
+rf + random
+score = -0.8597 epoch = 16 [time] 0:03:41.348651
+
+rf + pretrain
+score = -0.8422 epoch = 96 [time] 0:26:37.953723

@@ -110,7 +110,7 @@ def main(args):
     model = FTTransformer(
         FTTargs=args,
         n_cont_features=D.info['n_num_features'],
-        cat_cardinalities=[2]*C['train'].shape[1],
+        cat_cardinalities=[2]*C['train'].shape[1] if C is not None else [],
         d_out=d_out,
         **FTTransformer.get_default_kwargs(n_blocks=args.n_blocks),
     ).to(device)

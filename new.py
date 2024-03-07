@@ -2,11 +2,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import argparse
-from sklearn.decomposition import PCA
 import copy
 import tqdm
 import delu
 import math
+from sklearn.decomposition import PCA
 from sklearn.metrics import mean_squared_error
 
 from read_data import read_XTab_dataset_train, read_XTab_dataset_test
@@ -151,23 +151,24 @@ def train(args):
     # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
         
 def test(args):
-    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('abalone')
+    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\Laptop_Prices_Dataset')
+    #                                                # __public__\\Laptop_Prices_Dataset abalone
     if task_type != 'regression':
         raise AssertionError('not regression')
     
     # device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     test_model = Model(num_datasets=1, n_features=[n])
-    optimizer = optim.Adam(test_model.parameters(), lr=0.00001)
-    # optimizer = optim.Adam([
-    #     {'params': list(test_model.backbone.parameters()), 'lr': 0.00001},
-    #     {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
-    #     {'params': list(test_model.supervised.parameters()), 'lr': 0.00001}
-    # ])
+    # optimizer = optim.Adam(test_model.parameters(), lr=0.00001)
+    optimizer = optim.Adam([
+        {'params': list(test_model.backbone.parameters()), 'lr': 0.0001},
+        # {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
+        {'params': list(test_model.supervised.parameters()), 'lr': 0.0001}
+    ])
     
     criterion = nn.MSELoss()
     
-    # test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
+    test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
 
     # test_model.train()
     # best_score = None
@@ -262,5 +263,5 @@ if __name__ == "__main__":
     torch.manual_seed(0)
     delu.random.seed(0)
     
-    train(args)
-    # test(args)
+    # train(args)
+    test(args)
