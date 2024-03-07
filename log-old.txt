@@ -655,43 +655,8 @@ full dataset:
         YearPredictionMSD
         year_prediction_MSD
 
+-------- 03.06 13:00 --------
 49 datasets loaded, 46441 samples in total.
-epoch = 0
-| contr loss = tensor(48.6273, grad_fn=<AddBackward0>)
-| supvi loss = tensor(56.4193, grad_fn=<AddBackward0>)
-| total loss = tensor(105.0466, grad_fn=<AddBackward0>)
-epoch = 1
-| contr loss = tensor(46.8440, grad_fn=<AddBackward0>)
-| supvi loss = tensor(49.0320, grad_fn=<AddBackward0>)
-| total loss = tensor(95.8761, grad_fn=<AddBackward0>)
-epoch = 2
-| contr loss = tensor(44.9814, grad_fn=<AddBackward0>)
-| supvi loss = tensor(43.3670, grad_fn=<AddBackward0>)
-| total loss = tensor(88.3484, grad_fn=<AddBackward0>)
-epoch = 3
-| contr loss = tensor(43.2386, grad_fn=<AddBackward0>)
-| supvi loss = tensor(39.0524, grad_fn=<AddBackward0>)
-| total loss = tensor(82.2910, grad_fn=<AddBackward0>)
-epoch = 4
-| contr loss = tensor(41.4302, grad_fn=<AddBackward0>)
-| supvi loss = tensor(35.5520, grad_fn=<AddBackward0>)
-| total loss = tensor(76.9823, grad_fn=<AddBackward0>)
-epoch = 5
-| contr loss = tensor(39.5594, grad_fn=<AddBackward0>)
-| supvi loss = tensor(33.0404, grad_fn=<AddBackward0>)
-| total loss = tensor(72.5998, grad_fn=<AddBackward0>)
-epoch = 6
-| contr loss = tensor(37.7472, grad_fn=<AddBackward0>)
-| supvi loss = tensor(31.5544, grad_fn=<AddBackward0>)
-| total loss = tensor(69.3016, grad_fn=<AddBackward0>)
-epoch = 7
-| contr loss = tensor(36.0168, grad_fn=<AddBackward0>)
-| supvi loss = tensor(30.0325, grad_fn=<AddBackward0>)
-| total loss = tensor(66.0493, grad_fn=<AddBackward0>)
-epoch = 8
-| contr loss = tensor(34.4257, grad_fn=<AddBackward0>)
-| supvi loss = tensor(29.2354, grad_fn=<AddBackward0>)
-| total loss = tensor(63.6611, grad_fn=<AddBackward0>)
 epoch = 9
 | contr loss = tensor(33.0315, grad_fn=<AddBackward0>)
 | supvi loss = tensor(28.5934, grad_fn=<AddBackward0>)
@@ -707,3 +672,10 @@ epoch = 46
 FT-T + random feature + pretraining:     --- didn't divide val and test
 best = -0.6254679598082653
 epoch = 49
+
+-------- 03.06 23:42 --------
+epoch = 49
+| contr loss = tensor(15.5872, grad_fn=<AddBackward0>)
+| supvi loss = tensor(17.5245, grad_fn=<AddBackward0>)
+| total loss = tensor(33.1116, grad_fn=<AddBackward0>)
+| [time] 2:20:38.833049

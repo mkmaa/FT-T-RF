@@ -115,10 +115,17 @@ def train(args):
     
     model = Model(num_datasets, n_features)
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
+    # optimizer = optim.Adam([
+    #     {'params': list(test_model.backbone.parameters()), 'lr': 0.00001},
+    #     {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
+    #     {'params': list(test_model.supervised.parameters()), 'lr': 0.00001}
+    # ])
     criterion = nn.MSELoss()
+    timer = delu.tools.Timer()
     
     model.train()
-    for epoch in range(10):
+    timer.run()
+    for epoch in range(50):
         optimizer.zero_grad()
         data = copy.deepcopy(dataX)
         
@@ -128,11 +135,6 @@ def train(args):
         for i in range(num_datasets):
             prediction[i] = prediction[i].squeeze(dim=1)
         
-        # print('contrast =', contrast[0].shape)
-        # print('prediction =', prediction[0].shape)
-        # print('dataX =', dataX[0].shape)
-        # print('dataY =', dataY[0].shape)
-        
         contrastive_loss = sum(criterion(contrast[i], dataX[i]) for i in range(num_datasets))
         supervised_loss = sum(criterion(prediction[i], dataY[i]) for i in range(num_datasets))
         total_loss = contrastive_loss + supervised_loss
@@ -141,6 +143,7 @@ def train(args):
         print('| contr loss =', contrastive_loss)
         print('| supvi loss =', supervised_loss)
         print('| total loss =', total_loss)
+        print(f'| [time] {timer}')
 
         total_loss.backward()
         optimizer.step()
@@ -156,6 +159,12 @@ def test(args):
     
     test_model = Model(num_datasets=1, n_features=[n])
     optimizer = optim.Adam(test_model.parameters(), lr=0.00001)
+    # optimizer = optim.Adam([
+    #     {'params': list(test_model.backbone.parameters()), 'lr': 0.00001},
+    #     {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
+    #     {'params': list(test_model.supervised.parameters()), 'lr': 0.00001}
+    # ])
+    
     criterion = nn.MSELoss()
     
     # test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
@@ -250,5 +259,8 @@ if __name__ == "__main__":
         'abalone','Abalone_Dataset','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','delta_elevators','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','Gender_Gap_in_Spanish_WP','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','productivity_prediction','qsar_aquatic_toxicity','QSAR_biodegradation','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','Smoking_and_Drinking_Dataset_with_body_signal','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','superconductivity','Superconductivty','synchronous_machine','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','wave_energy_farm','Website_Phishing','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','yeast'
     ]
     
-    # train(args)
-    test(args)
+    torch.manual_seed(0)
+    delu.random.seed(0)
+    
+    train(args)
+    # test(args)
