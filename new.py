@@ -13,27 +13,63 @@ from read_data import read_XTab_dataset_train, read_XTab_dataset_test
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
 
 class RandomFeature(nn.Module):
-    def __init__(self, n_features: int, d_embedding: int, n_dims: int):
+    def __init__(self, n_features: int, d_embedding: int, n_dims: int, n_ensemble: int):
         super(RandomFeature, self).__init__()
         self.d_embedding = d_embedding
         self.n_dims = n_dims
         self.clip_data_value = 27.6041
+        # self.weight = nn.Parameter(torch.empty(n_features, d_embedding, rf_size))
+        # self.bias = nn.Parameter(torch.empty(n_features, d_embedding, rf_size))
         
-        rf_linear = nn.Linear(n_features, self.d_embedding, bias=True, dtype=torch.float32) # random feature
-        nn.init.kaiming_normal_(rf_linear.weight, mode="fan_out", nonlinearity="relu")
-        nn.init.zeros_(rf_linear.bias)
-        rf_linear.weight.requires_grad = False
-        rf_linear.bias.requires_grad = False
-        self.rf = nn.Sequential(rf_linear, nn.ReLU())
-        self.pca = PCA(n_components=self.n_dims)
+        self.rf = nn.ModuleList()
+        self.pca = []
+        for _ in range(n_ensemble):
+            rf_linear = nn.Linear(n_features, self.d_embedding, bias=True, dtype=torch.float32) # random feature
+            nn.init.kaiming_normal_(rf_linear.weight, mode="fan_out", nonlinearity="relu")
+            nn.init.zeros_(rf_linear.bias)
+            rf_linear.weight.requires_grad = False
+            rf_linear.bias.requires_grad = False
+            self.rf.append(nn.Sequential(rf_linear, nn.ReLU()))
+            self.pca.append(PCA(n_components=self.n_dims))
+        
+        # rf_linear = nn.Linear(n_features, self.d_embedding, bias=True, dtype=torch.float32) # random feature
+        # nn.init.kaiming_normal_(rf_linear.weight, mode="fan_out", nonlinearity="relu")
+        # nn.init.zeros_(rf_linear.bias)
+        # rf_linear.weight.requires_grad = False
+        # rf_linear.bias.requires_grad = False
+        # self.rf = nn.Sequential(rf_linear, nn.ReLU())
+        # self.pca = PCA(n_components=self.n_dims)
 
     def forward(self, x: torch.Tensor):
-        x = x.flatten(start_dim=1)
-        with torch.no_grad():
-            x = self.rf(x)
-        x = torch.from_numpy(self.pca.fit_transform(x.cpu().numpy())).to(x.device)
-        x = torch.clamp(x, -self.clip_data_value, self.clip_data_value)
-        x = x.unsqueeze(1)
+        # with torch.no_grad():
+        #     x = x[..., None, None] * self.weight
+        #     x = x + self.bias[None]
+        #     x = torch.sum(x, dim=1)
+        #     x = x.permute(0, 2, 1)
+        #     x = self.relu(x)
+        # original_shape = x.shape
+        # x = x.reshape(-1, original_shape[1])
+        # self.pca = PCA(n_components=self.pca_size)
+        # x = self.pca.fit_transform(x.cpu().numpy())
+        # x = torch.from_numpy(x).to('cuda:0').reshape(original_shape[0], self.pca_size, original_shape[2])
+        # # x = torch.from_numpy(self.pca.fit_transform(x.cpu().numpy())).to(x.device)
+        # x = torch.clamp(x, -self.clip_data_value, self.clip_data_value)
+        
+        outputs = []
+        for rf, pca in zip(self.rf, self.pca):
+            with torch.no_grad():
+                x_rf = rf(x)
+            x_pca = torch.from_numpy(pca.fit_transform(x_rf.cpu().numpy())).to(x.device)
+            x_clamp = torch.clamp(x_pca, -self.clip_data_value, self.clip_data_value)
+            outputs.append(x_clamp)
+        return torch.stack(outputs, dim=1)
+        
+        # x = x.flatten(start_dim=1)
+        # with torch.no_grad():
+        #     x = self.rf(x)
+        # x = torch.from_numpy(self.pca.fit_transform(x.cpu().numpy())).to(x.device)
+        # x = torch.clamp(x, -self.clip_data_value, self.clip_data_value)
+        # x = x.unsqueeze(1)
         return x
 
 class ContrastiveHead(nn.Module):
@@ -72,22 +108,23 @@ class Model(nn.Module):
     def __init__(self, num_datasets, n_features):
         super(Model, self).__init__()
         self.num_datasets = num_datasets
-        self.rf = nn.ModuleList([RandomFeature(n_features=n_features[i], d_embedding=65536, n_dims=384) for i in range(num_datasets)])
-        kwargs = FTTransformer.get_default_kwargs(n_blocks=6)
+        self.rf = nn.ModuleList([RandomFeature(n_features=n_features[i], d_embedding=8192, n_dims=96, n_ensemble=8)
+                                 for i in range(num_datasets)])
+        kwargs = FTTransformer.get_default_kwargs(n_blocks=1)
         del kwargs['_is_default']
         kwargs['d_out'] = None # 1, or when multiclass, should be set to n_classes
         self.backbone = FTTransformerBackbone(**kwargs)
-        self.contrastive = nn.ModuleList([ContrastiveHead(d_in=384, d_out=n_features[i]) for i in range(num_datasets)])
-        self.supervised = nn.ModuleList([SupervisedHead(d_in=384, d_out=1) for i in range(num_datasets)])
+        self.contrastive = nn.ModuleList([ContrastiveHead(d_in=96, d_out=n_features[i]) for i in range(num_datasets)])
+        self.supervised = nn.ModuleList([SupervisedHead(d_in=96, d_out=1) for i in range(num_datasets)])
 
     def forward(self, x: dict[torch.Tensor]):
         contrast: list[torch.Tensor] = []
         prediction: list[torch.Tensor] = []
         for i in range(self.num_datasets):
             x[i] = self.rf[i](x[i])
-            # print('rf =', x[i].shape)
+            # print('rf shape =', x[i].shape)
             x[i] = self.backbone(x[i])
-            # print('backbone =', x[i].shape)
+            # print('backbone shape =', x[i].shape)
             contrast.append(self.contrastive[i](x[i]))
             prediction.append(self.supervised[i](x[i]))
         return contrast, prediction
@@ -160,41 +197,20 @@ def test(args):
     
     test_model = Model(num_datasets=1, n_features=[n])
     # optimizer = optim.Adam(test_model.parameters(), lr=0.00001)
-    optimizer = optim.Adam([
-        {'params': list(test_model.backbone.parameters()), 'lr': 0.0001},
-        # {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
-        {'params': list(test_model.supervised.parameters()), 'lr': 0.0001}
+    # optimizer = optim.Adam([
+    #     {'params': list(test_model.backbone.parameters()), 'lr': 0.0001},
+    #     # {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
+    #     {'params': list(test_model.supervised.parameters()), 'lr': 0.0001}
+    # ])
+    optimizer = torch.optim.AdamW([
+        {'params': list(test_model.backbone.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
+        # {'params': list(test_model.contrastive.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
+        {'params': list(test_model.supervised.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5}
     ])
     
     criterion = nn.MSELoss()
     
-    test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
-
-    # test_model.train()
-    # best_score = None
-    # best_epoch = None
-    # for epoch in range(50):
-    #     optimizer.zero_grad()
-    #     data = copy.deepcopy([X])
-        
-    #     prediction: list[torch.Tensor]
-    #     _, prediction = test_model(data)
-    #     prediction[0] = prediction[0].squeeze(dim=1)
-    #     loss = criterion(prediction[0], Y)
-        
-    #     score = -(mean_squared_error(Y.detach().numpy(), prediction[0].detach().numpy()) ** 0.5 * Y.std().item())
-    #     if best_score is None or score > best_score:
-    #         best_score = score
-    #         best_epoch = epoch
-        
-    #     print('epoch =', epoch)
-    #     print('| loss =', loss)
-    #     print('| score =', score)
-
-    #     loss.backward()
-    #     optimizer.step()
-    # print('best =', best_score)
-    # print('epoch =', best_epoch)
+    # test_model.backbone.load_state_dict(torch.load('checkpoints/trained_backbone.pth'))
     
     n_epochs = 1000000
     patience = 16
@@ -213,6 +229,7 @@ def test(args):
         data = copy.deepcopy([X_train])
         prediction: list[torch.Tensor]
         _, prediction = test_model(data)
+        print(f'len pred = {len(prediction)}')
         prediction[0] = prediction[0].squeeze(dim=1)
         loss = criterion(prediction[0], Y_train)
         
@@ -252,9 +269,6 @@ if __name__ == "__main__":
     # parser.add_argument('--n_blocks', type=int, default=3, choices=[1, 2, 3, 4, 5, 6], help='n_blocks of token embedding in FT-T')
     
     args = parser.parse_args()
-    # if args.init == 'kaiming_uniform' or 'kaiming_normal':
-    #     if args.fan == None:
-    #         raise AssertionError('please input fan mode')
     
     args.training_dataset = [
         'abalone','Abalone_Dataset','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','delta_elevators','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','Gender_Gap_in_Spanish_WP','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','productivity_prediction','qsar_aquatic_toxicity','QSAR_biodegradation','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','Smoking_and_Drinking_Dataset_with_body_signal','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','superconductivity','Superconductivty','synchronous_machine','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','wave_energy_farm','Website_Phishing','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','yeast'
