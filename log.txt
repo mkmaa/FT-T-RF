@@ -22,3 +22,6 @@ Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\
 Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='True', rf_out=None, bias='False', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
 {'val': -0.5855828801563153, 'test': -0.6201857641553897, 'epoch': 198}
 
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\abalone', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.6470413804890577, 'test': -0.6710790532626693, 'epoch': 80}
+

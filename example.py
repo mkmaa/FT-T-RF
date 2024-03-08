@@ -63,7 +63,7 @@ def main(args):
         data_numpy["val"]["x_cat"] = C['val'].astype(np.int64)
         data_numpy["test"]["x_cat"] = C['test'].astype(np.int64)
         
-    train_idx = (len(N['train']) if N is not None else 0) + (len(C['train']) if C is not None else 0)
+    train_idx = max((len(N['train']) if N is not None else 0), (len(C['train']) if C is not None else 0))
     # val_idx = len(N['val']) + len(C['val'])
     # test_idx = len(N['test']) + len(C['test'])
         
