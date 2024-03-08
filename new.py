@@ -10,7 +10,7 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import mean_squared_error
 
 from read_data import read_XTab_dataset_train, read_XTab_dataset_test
-from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
+from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone, _CLSEmbedding
 
 class RandomFeature(nn.Module):
     def __init__(self, n_features: int, d_embedding: int, n_dims: int, n_ensemble: int):
@@ -21,6 +21,7 @@ class RandomFeature(nn.Module):
         # self.weight = nn.Parameter(torch.empty(n_features, d_embedding, rf_size))
         # self.bias = nn.Parameter(torch.empty(n_features, d_embedding, rf_size))
         
+        self.cls = _CLSEmbedding(n_dims)
         self.rf = nn.ModuleList()
         self.pca = []
         for _ in range(n_ensemble):
@@ -56,11 +57,15 @@ class RandomFeature(nn.Module):
         # x = torch.clamp(x, -self.clip_data_value, self.clip_data_value)
         
         outputs = []
+        x_cls = self.cls(x.shape[:-1]).squeeze(dim=1)
+        # print(f'cls shape = {x_cls.shape}')
+        outputs.append(x_cls)
         for rf, pca in zip(self.rf, self.pca):
             with torch.no_grad():
                 x_rf = rf(x)
             x_pca = torch.from_numpy(pca.fit_transform(x_rf.cpu().numpy())).to(x.device)
             x_clamp = torch.clamp(x_pca, -self.clip_data_value, self.clip_data_value)
+            # print(f'clamp shape = {x_clamp.shape}')
             outputs.append(x_clamp)
         return torch.stack(outputs, dim=1)
         
