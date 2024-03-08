@@ -12,6 +12,7 @@ from sklearn.metrics import mean_squared_error
 from read_data import read_XTab_dataset_train, read_XTab_dataset_test
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone, _CLSEmbedding
 
+
 class RandomFeature(nn.Module):
     def __init__(self, n_features: int, d_embedding: int, n_dims: int, n_ensemble: int):
         super(RandomFeature, self).__init__()
@@ -77,6 +78,7 @@ class RandomFeature(nn.Module):
         # x = x.unsqueeze(1)
         return x
 
+
 class ContrastiveHead(nn.Module):
     def __init__(self, d_in: int, d_out: int, bias: bool = True):
         super(ContrastiveHead, self).__init__()
@@ -92,6 +94,7 @@ class ContrastiveHead(nn.Module):
         x = self.activation(x)
         x = self.linear2(x)
         return x
+
 
 class SupervisedHead(nn.Module):
     def __init__(self, d_in: int, d_out: int, bias: bool = True):
@@ -109,6 +112,7 @@ class SupervisedHead(nn.Module):
         x = self.linear2(x)
         return x
 
+
 class Model(nn.Module):
     def __init__(self, num_datasets, n_features):
         super(Model, self).__init__()
@@ -122,7 +126,7 @@ class Model(nn.Module):
         self.contrastive = nn.ModuleList([ContrastiveHead(d_in=96, d_out=n_features[i]) for i in range(num_datasets)])
         self.supervised = nn.ModuleList([SupervisedHead(d_in=96, d_out=1) for i in range(num_datasets)])
 
-    def forward(self, x: dict[torch.Tensor]):
+    def forward(self, x: dict[torch.Tensor]) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
         contrast: list[torch.Tensor] = []
         prediction: list[torch.Tensor] = []
         for i in range(self.num_datasets):
@@ -133,7 +137,8 @@ class Model(nn.Module):
             contrast.append(self.contrastive[i](x[i]))
             prediction.append(self.supervised[i](x[i]))
         return contrast, prediction
-        
+
+
 def train(args):
     dataX: list[torch.Tensor] = []
     dataY: list[torch.Tensor] = []
@@ -191,7 +196,8 @@ def train(args):
         optimizer.step()
     torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
     # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
-        
+
+
 def test(args):
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\Laptop_Prices_Dataset')
     #                                                # __public__\\Laptop_Prices_Dataset abalone
@@ -225,28 +231,26 @@ def test(args):
     best_score = -math.inf
     best_epoch = 0
     
-    Y_std = Y_test.numpy().std()
-    
     timer.run()
     for epoch in range(n_epochs):
+        # for batch in tqdm(
+        #     delu.iter_batches(data["train"], batch_size, shuffle=True),
+        #     desc=f"Epoch {epoch}",
+        #     total=epoch_size,
+        # ):
         test_model.train()
         optimizer.zero_grad()
-        data = copy.deepcopy([X_train])
-        prediction: list[torch.Tensor]
-        _, prediction = test_model(data)
-        print(f'len pred = {len(prediction)}')
-        prediction[0] = prediction[0].squeeze(dim=1)
-        loss = criterion(prediction[0], Y_train)
-        
+        _, prediction = test_model([X_train])
+        # print(f'len pred = {len(prediction)}, shape pred = {prediction[0].shape}')
+        loss = criterion(prediction[0].squeeze(dim=1), Y_train)
+        print(f'loss = {loss.item()}')
         loss.backward()
         optimizer.step()
 
         test_model.eval()
-        test_data = copy.deepcopy([X_test])
-        test_prediction: list[torch.Tensor]
-        _, test_prediction = test_model(test_data)
+        _, test_prediction = test_model([X_test])
         test_prediction[0] = test_prediction[0].squeeze(dim=1)
-        score = -(mean_squared_error(test_prediction[0].detach().numpy(), Y_test.detach().numpy()) ** 0.5 * Y_std)
+        score = -(mean_squared_error(test_prediction[0].detach().numpy(), Y_test.detach().numpy()))
         
         print(f"score = {score:.4f} epoch = {epoch} [time] {timer}")
 
@@ -261,6 +265,7 @@ def test(args):
 
     print("\n\nResult:")
     print('best =', best_score, 'epoch =', best_epoch)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
