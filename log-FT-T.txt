@@ -25,3 +25,7 @@ Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\
 Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\abalone', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
 {'val': -0.6470413804890577, 'test': -0.6710790532626693, 'epoch': 80}
 
+2024-03-08 20:19:31.130086
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\abalone', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.6459321951313813, 'test': -0.6693288998084953, 'epoch': 100}
+

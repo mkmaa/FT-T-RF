@@ -2,6 +2,7 @@
 import math
 import warnings
 from typing import Dict, Literal
+from datetime import datetime
 
 warnings.simplefilter("ignore")
 import delu  # Deep Learning Utilities: https://github.com/Yura52/delu
@@ -207,7 +208,8 @@ def main(args):
 
     print("\n\nResult:")
     print(best)
-    with open("log.txt", "a") as f:
+    with open("log-FT-T.txt", "a") as f:
+        print(datetime.now(), file=f)
         print(args, file=f)
         print(best, file=f)
         print('', file=f)

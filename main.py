@@ -6,6 +6,7 @@ import copy
 from tqdm.std import tqdm
 import delu
 import math
+from datetime import datetime
 from sklearn.decomposition import PCA
 from sklearn.metrics import mean_squared_error
 
@@ -275,6 +276,11 @@ def test(args):
 
     print("\n\nResult:")
     print('best =', best_score, 'epoch =', best_epoch)
+    with open("log-XTab.txt", "a") as f:
+        print(datetime.now(), file=f)
+        print(args, file=f)
+        print('best =', best_score, 'epoch =', best_epoch, file=f)
+        print('', file=f)
 
 
 if __name__ == "__main__":
