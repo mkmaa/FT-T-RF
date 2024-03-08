@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import argparse
 import copy
-import tqdm
+from tqdm.std import tqdm
 import delu
 import math
 from sklearn.decomposition import PCA
@@ -201,6 +201,8 @@ def train(args):
 def test(args):
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\Laptop_Prices_Dataset')
     #                                                # __public__\\Laptop_Prices_Dataset abalone
+    print(f'training size = {X_train.shape[0]}, testing size = {X_test.shape[0]}.')
+    
     if task_type != 'regression':
         raise AssertionError('not regression')
     
@@ -225,6 +227,7 @@ def test(args):
     
     n_epochs = 1000000
     patience = 16
+    batch_size = 128
 
     timer = delu.tools.Timer()
     early_stopping = delu.tools.EarlyStopping(patience, mode="max")
@@ -233,35 +236,40 @@ def test(args):
     
     timer.run()
     for epoch in range(n_epochs):
-        # for batch in tqdm(
-        #     delu.iter_batches(data["train"], batch_size, shuffle=True),
-        #     desc=f"Epoch {epoch}",
-        #     total=epoch_size,
-        # ):
-        test_model.train()
-        optimizer.zero_grad()
-        _, prediction = test_model([X_train])
-        # print(f'len pred = {len(prediction)}, shape pred = {prediction[0].shape}')
-        loss = criterion(prediction[0].squeeze(dim=1), Y_train)
-        print(f'loss = {loss.item()}')
-        loss.backward()
-        optimizer.step()
+        for batch in tqdm(
+            delu.iter_batches({'x': X_train, 'y': Y_train}, batch_size=batch_size, shuffle=True, drop_last=True),
+            desc=f"Epoch {epoch}",
+            total=math.floor(X_train.shape[0]/batch_size),
+            ncols=80
+        ):
+            test_model.train()
+            optimizer.zero_grad()
+            _, prediction = test_model([batch['x']])
+            # print(f'len pred = {len(prediction)}, shape pred = {prediction[0].shape}')
+            loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
+            # print(f'loss = {loss.item()}')
+            loss.backward()
+            optimizer.step()
 
         test_model.eval()
         _, test_prediction = test_model([X_test])
         test_prediction[0] = test_prediction[0].squeeze(dim=1)
         score = -(mean_squared_error(test_prediction[0].detach().numpy(), Y_test.detach().numpy()))
         
-        print(f"score = {score:.4f} epoch = {epoch} [time] {timer}")
+        log = f" [score] {score:.4f}  [time] {timer}"
+
+        if score > best_score:
+            best_score = score
+            best_epoch = epoch
+            log = '🌸' + log
+        else:
+            log = '  ' + log
+
+        print(log)
 
         early_stopping.update(score)
         if epoch >= 10 and early_stopping.should_stop():
             break
-
-        if score > best_score:
-            print("🌸 New best epoch! 🌸")
-            best_score = score
-            best_epoch = epoch
 
     print("\n\nResult:")
     print('best =', best_score, 'epoch =', best_epoch)
