@@ -125,8 +125,12 @@ class Model(nn.Module):
         del kwargs['_is_default']
         kwargs['d_out'] = None # 1, or when multiclass, should be set to n_classes
         self.backbone = FTTransformerBackbone(**kwargs)
-        self.contrastive = nn.ModuleList([ContrastiveHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)])
-        self.supervised = nn.ModuleList([SupervisedHead(d_in=args.n_dims, d_out=1) for i in range(num_datasets)])
+        self.contrastive = nn.ModuleList([
+            ContrastiveHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)
+        ]) if args.mode == 'train' else None
+        self.supervised = nn.ModuleList([
+            SupervisedHead(d_in=args.n_dims, d_out=1) for i in range(num_datasets)
+        ])
 
     def forward(self, x: dict[torch.Tensor]) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
         contrast: list[torch.Tensor] = []
@@ -136,7 +140,8 @@ class Model(nn.Module):
             # print('rf shape =', x[i].shape)
             x[i] = self.backbone(x[i])
             # print('backbone shape =', x[i].shape)
-            contrast.append(self.contrastive[i](x[i]))
+            if self.contrastive != None:
+                contrast.append(self.contrastive[i](x[i]))
             prediction.append(self.supervised[i](x[i]))
         return contrast, prediction
 
@@ -162,8 +167,8 @@ def train(args):
     num_datasets: int = len(n_features_list)
     print(num_datasets, 'datasets loaded,', n_samples, 'samples in total.')
     
-    model = Model(num_datasets, n_features_list)
-    optimizer = optim.Adam(model.parameters(), lr=0.0001)
+    model = Model(num_datasets, n_features_list, args)
+    optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-5)
     # optimizer = optim.Adam([
     #     {'params': list(test_model.backbone.parameters()), 'lr': 0.00001},
     #     {'params': list(test_model.contrastive.parameters()), 'lr': 0.00001},
@@ -174,7 +179,7 @@ def train(args):
     
     model.train()
     timer.run()
-    for epoch in range(50):
+    for epoch in range(100):
         optimizer.zero_grad()
         data = copy.deepcopy(dataX)
         
@@ -226,7 +231,7 @@ def test(args):
     criterion = nn.MSELoss()
     
     if args.pretrain == 'True':
-        test_model.backbone.load_state_dict(torch.load(args.checkpoint + '.pth'))
+        test_model.backbone.load_state_dict(torch.load('checkpoints\\' + args.checkpoint + '.pth'))
     
     n_epochs = 1000000
     patience = 16
@@ -298,9 +303,10 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     args.n_dims = [96, 128, 192, 256, 320, 384][args.n_blocks - 1]
-    args.training_dataset = [
-        'abalone','Abalone_Dataset','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','delta_elevators','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','Gender_Gap_in_Spanish_WP','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','productivity_prediction','qsar_aquatic_toxicity','QSAR_biodegradation','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','Smoking_and_Drinking_Dataset_with_body_signal','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','superconductivity','Superconductivty','synchronous_machine','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','wave_energy_farm','Website_Phishing','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','yeast'
-    ]
+    if args.mode == 'train':
+        args.training_dataset = [
+            'abalone','Abalone_Dataset','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','delta_elevators','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','Gender_Gap_in_Spanish_WP','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','productivity_prediction','qsar_aquatic_toxicity','QSAR_biodegradation','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','Smoking_and_Drinking_Dataset_with_body_signal','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','superconductivity','Superconductivty','synchronous_machine','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','wave_energy_farm','Website_Phishing','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','yeast'
+        ]
     
     torch.manual_seed(args.seed)
     delu.random.seed(args.seed)

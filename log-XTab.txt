@@ -1,0 +1,4 @@
+2024-03-09 12:27:55.195026
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.4211151 epoch = 26
+
