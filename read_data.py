@@ -228,9 +228,11 @@ def read_XTab_dataset_test(dataset):
     )
     D, N, C, Y, y_info = read_dataset(args=args)
     N_train = N['train'] if N is not None else None
-    N_test = np.vstack((N['val'], N['test'])) if N is not None else None
+    N_test = N['val'] if N is not None else None
+    # N_test = np.vstack((N['val'], N['test'])) if N is not None else None
     C_train = C['train'] if C is not None else None
-    C_test = np.vstack((C['val'], C['test'])) if C is not None else None
+    C_test = C['val'] if C is not None else None
+    # C_test = np.vstack((C['val'], C['test'])) if C is not None else None
     if N is None and C is None:
         raise AssertionError('X_tot is None')
     elif N is None:
@@ -243,7 +245,8 @@ def read_XTab_dataset_test(dataset):
         X_train = np.hstack((N_train, C_train))
         X_test = np.hstack((N_test, C_test))
     Y_train = Y['train']
-    Y_test = np.hstack((Y['val'], Y['test']))
+    Y_test = Y['val']
+    # Y_test = np.hstack((Y['val'], Y['test']))
     if X_train.shape[0] != Y_train.shape[0] or X_test.shape[0] != Y_test.shape[0]:
         raise AssertionError('the shape of X_tot and Y_tot are different')
     n_feature = X_train.shape[1]

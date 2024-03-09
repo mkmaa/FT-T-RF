@@ -2,3 +2,55 @@
 Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
 best = -0.4211151 epoch = 26
 
+2024-03-09 15:18:13.988846
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=6, batch=512, seed=0, n_dims=384)
+best = -0.3601289 epoch = 24
+
+2024-03-09 15:26:03.213189
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=1, n_blocks=6, batch=512, seed=0, n_dims=384)
+best = -0.40300652 epoch = 18
+
+2024-03-09 15:28:08.251249
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.42469582 epoch = 22 --- use MLP
+
+2024-03-09 15:31:12.519213
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.42094132 epoch = 32 --- unuse MLP
+
+2024-03-09 15:32:56.256515
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.9137281 epoch = 9
+
+2024-03-09 15:35:31.932632
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.9137281 epoch = 9
+
+2024-03-09 15:37:19.811848
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.20419791 epoch = 564
+
+2024-03-09 15:37:56.443892
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.639057 epoch = 71
+
+2024-03-09 15:40:00.771119
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.61771995 epoch = 57
+
+2024-03-09 15:41:15.194518
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.48773864 epoch = 18
+
+2024-03-09 15:41:23.509383
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.48773864 epoch = 18
+
+2024-03-09 15:42:10.832491
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=128, n_ensemble=1, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.49845883 epoch = 16
+
+2024-03-09 15:48:56.666073
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.4129125 epoch = 41
+

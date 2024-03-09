@@ -236,6 +236,6 @@ if __name__ == "__main__":
         if args.fan == None:
             raise AssertionError('please input fan mode')
         
-    args.dataset = '..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+args.dataset
+    args.dataset = '..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\'+args.dataset
     
     main(args)
