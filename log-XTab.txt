@@ -54,3 +54,19 @@ best = -0.49845883 epoch = 16
 Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
 best = -0.4129125 epoch = 41
 
+2024-03-10 12:47:26.275836
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.6117084 epoch = 22
+
+2024-03-10 12:51:12.319401
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.62925625 epoch = 33
+
+2024-03-10 13:02:12.867990
+Namespace(mode='test', dataset='r35', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.9986322 epoch = 20
+
+2024-03-10 13:11:54.971978
+Namespace(mode='test', dataset='r35', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -1.0015677 epoch = 6
+

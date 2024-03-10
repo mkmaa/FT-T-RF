@@ -208,14 +208,19 @@ def train(args):
 def test(args):
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\' + args.dataset)
     #                                                # __public__\\Laptop_Prices_Dataset        abalone
-    print(f'training size = {X_train.shape[0]}, testing size = {X_test.shape[0]}.')
+    print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     
     if task_type != 'regression':
         raise AssertionError('not regression')
     
-    # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
+    print(f'device: {device}')
+    X_train = X_train.to(device)
+    X_test = X_test.to(device)
+    Y_train = Y_train.to(device)
     
-    test_model = Model(num_datasets=1, n_features_list=[n], args=args)
+    test_model = Model(num_datasets=1, n_features_list=[n], args=args).to(device)
     # optimizer = optim.Adam(test_model.parameters(), lr=0.00001)
     # optimizer = optim.Adam([
     #     {'params': list(test_model.backbone.parameters()), 'lr': 0.0001},
@@ -262,7 +267,7 @@ def test(args):
         test_model.eval()
         _, test_prediction = test_model([X_test])
         test_prediction[0] = test_prediction[0].squeeze(dim=1)
-        score = -(mean_squared_error(test_prediction[0].detach().numpy(), Y_test.detach().numpy()))
+        score = -(mean_squared_error(test_prediction[0].to('cpu').detach().numpy(), Y_test.detach().numpy()))
         
         log = f" [score] {score:.4f}  [time] {timer}"
 

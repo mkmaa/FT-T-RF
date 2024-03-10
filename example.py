@@ -27,7 +27,8 @@ from read_data import read_dataset
 TaskType = Literal["regression", "binclass", "multiclass"]
 
 def main(args):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
     # Set random seeds in all libraries.
     delu.random.seed(0)
 
@@ -156,7 +157,7 @@ def main(args):
             score = sklearn.metrics.accuracy_score(y_true, y_pred)
         else:
             assert task_type == "regression"
-            score = -(sklearn.metrics.mean_squared_error(y_true, y_pred) ** 0.5 * Y_std)
+            score = -(sklearn.metrics.mean_squared_error(y_true, y_pred)) # mse, after preprocessing
         return score  # The higher -- the better.
 
     print(f'Test score before training: {evaluate("test"):.4f}')
