@@ -1,63 +1,40 @@
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\abalone', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.6458349971339626, 'test': -0.6718980873931742, 'epoch': 46}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5783348218237258, 'test': -0.4835632505644009, 'epoch': 73}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='True', rf_out=None, bias='False', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5786213934607359, 'test': -0.504704072993128, 'epoch': 78}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='True', rf_out=None, bias='False', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5786213934607359, 'test': -0.504704072993128, 'epoch': 78}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5697280554217321, 'test': -0.49615249886668195, 'epoch': 69}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=6, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5783348218237258, 'test': -0.4835632505644009, 'epoch': 73}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5651080809661262, 'test': -0.4837406988999391, 'epoch': 118}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\\\Laptop_Prices_Dataset', rf_in='True', rf_out=None, bias='False', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5855828801563153, 'test': -0.6201857641553897, 'epoch': 198}
-
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\abalone', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.6470413804890577, 'test': -0.6710790532626693, 'epoch': 80}
-
-2024-03-08 20:19:31.130086
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\abalone', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.6459321951313813, 'test': -0.6693288998084953, 'epoch': 100}
-
-2024-03-09 14:51:19.765994
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5651080809661262, 'test': -0.4837406988999391, 'epoch': 118}
-
-2024-03-10 12:44:25.714055
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../communities_and_crime', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.5930363733384205, 'test': -0.5750895015885278, 'epoch': 69}
-
-2024-03-10 12:45:15.900826
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../communities_and_crime', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.6162340066161448, 'test': -0.5624737468526987, 'epoch': 10}
-
-2024-03-10 13:19:31.078384
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\r35', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -1.0013080624855346, 'test': -0.9733127691652762, 'epoch': 4}
-
-2024-03-10 13:21:15.455969
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Student_Performance', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.6121551477082608, 'test': -0.5560849544968944, 'epoch': 100}
-
-2024-03-10 13:23:57.309838
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Student_Performance', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.6121551477082608, 'test': -0.5560849544968944, 'epoch': 100}
-
-2024-03-10 13:24:12.362612
-Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Student_Performance', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
-{'val': -0.37473392, 'test': -0.30923048, 'epoch': 100}
-
 2024-03-10 13:25:01.226014
 Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Student_Performance', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
 {'val': -0.37473392, 'test': -0.30923048, 'epoch': 100}
+
+2024-03-10 15:44:34.143383
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Student_Performance', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.3816164, 'test': -0.30408013, 'epoch': 114}
+
+2024-03-10 15:45:40.046667
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Student_Performance', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.39309287, 'test': -0.33571473, 'epoch': 154}
+
+2024-03-10 15:48:02.980609
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.3152371, 'test': -0.23898883, 'epoch': 130}
+
+2024-03-10 15:58:18.063048
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Laptop_Prices_Dataset', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.32718033, 'test': -0.26243755, 'epoch': 95}
+
+2024-03-10 17:00:49.164584
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\r35', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -1.0017695, 'test': -0.9487618, 'epoch': 5}
+
+2024-03-10 17:02:31.285521
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../communities_and_crime', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.35271132, 'test': -0.32724082, 'epoch': 66}
+
+2024-03-10 17:46:14.929362
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../cpu_small', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.028145526, 'test': -0.026588343, 'epoch': 75}
+
+2024-03-10 19:22:59.827172
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../ada_agnostic', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': 0.8315068493150685, 'test': 0.8455640744797371, 'epoch': 29}
+
+2024-03-10 19:23:54.574728
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\water_quality', rf_in='False', rf_out=None, bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': 0.909375, 'test': 0.89375, 'epoch': 77}
 

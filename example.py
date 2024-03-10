@@ -36,7 +36,10 @@ def main(args):
     D, N, C, Y, y_info = read_dataset(args)
 
     task_type: TaskType = D.info['task_type']
-    n_classes = 0
+    n_classes = 2
+    
+    if task_type != 'regression' and task_type != 'binclass':
+        raise AssertionError('not regression or binclass')
 
     # >>> Labels.
     # Regression labels must be represented by float32.
@@ -46,8 +49,10 @@ def main(args):
         Y['test'] = Y['test'].astype(np.float32)
     else:
         assert n_classes is not None
-        Y = Y.astype(np.int64)
-        assert set(Y.tolist()) == set(
+        Y['train'] = Y['train'].astype(np.int64)
+        Y['val'] = Y['val'].astype(np.int64)
+        Y['test'] = Y['test'].astype(np.int64)
+        assert set(Y['train'].tolist()) == set(
             range(n_classes)
         ), "Classification labels must form the range [0, 1, ..., n_classes - 1]"
 

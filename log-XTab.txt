@@ -70,3 +70,127 @@ best = -0.9986322 epoch = 20
 Namespace(mode='test', dataset='r35', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=128, seed=0, n_dims=96)
 best = -1.0015677 epoch = 6
 
+2024-03-10 15:37:21.598954
+Namespace(mode='test', dataset='Student_Performance', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -1.4278783 epoch = 0
+
+2024-03-10 15:38:28.015955
+Namespace(mode='test', dataset='Student_Performance', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -1.8480638 epoch = 0
+
+2024-03-10 15:39:29.476782
+Namespace(mode='test', dataset='Student_Performance', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -1.8480638 epoch = 0
+
+2024-03-10 15:39:58.765818
+Namespace(mode='test', dataset='Student_Performance', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.47482637 epoch = 128
+
+2024-03-10 15:41:54.243836
+Namespace(mode='test', dataset='Student_Performance', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=253, seed=0, n_dims=96)
+best = -0.43640926 epoch = 142
+
+2024-03-10 15:48:32.928441
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.3097699 epoch = 83
+
+2024-03-10 16:00:19.070754
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.3097699 epoch = 83
+
+2024-03-10 16:00:43.090765
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=258, seed=0, n_dims=96)
+best = -0.3005442 epoch = 145
+
+2024-03-10 16:01:39.806645
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.30860344 epoch = 121
+
+2024-03-10 16:28:26.315019
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.31439555 epoch = 37
+
+2024-03-10 16:37:28.370012
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.31068465 epoch = 29
+
+2024-03-10 16:43:23.898630
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.30969205 epoch = 15
+
+2024-03-10 16:52:34.980283
+Namespace(mode='test', dataset='Student_Performance', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.42390066 epoch = 117
+
+2024-03-10 17:00:02.788060
+Namespace(mode='test', dataset='r35', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -1.0041088 epoch = 6
+
+2024-03-10 17:03:41.983467
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.35576987 epoch = 36  8192 - 96
+
+2024-03-10 17:22:12.243104
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.6117084 epoch = 22  old
+
+2024-03-10 17:28:24.336331
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.36871147 epoch = 37  32768 - 384
+
+2024-03-10 17:29:17.701468
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = -0.39373308 epoch = 31  32768 - 96
+
+2024-03-10 17:30:45.083992
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=1029, n_dims=96)
+best = -0.36867392 epoch = 34
+
+2024-03-10 17:33:33.070968
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=8, n_blocks=1, batch=256, seed=1029, n_dims=96)
+best = -0.37665623 epoch = 44
+
+2024-03-10 17:33:51.722781
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=16, n_blocks=1, batch=256, seed=1029, n_dims=96)
+best = -0.38955495 epoch = 28
+
+2024-03-10 17:34:28.532124
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=16, n_blocks=3, batch=256, seed=1029, n_dims=192)
+best = -0.39562052 epoch = 12
+
+2024-03-10 17:35:48.784478
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=64, n_blocks=3, batch=256, seed=1029, n_dims=192)
+best = -0.38856673 epoch = 8
+
+2024-03-10 17:36:25.940539
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=256, seed=1029, n_dims=96)
+best = -0.36171734 epoch = 38
+
+2024-03-10 17:36:48.413112
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=64, seed=1029, n_dims=96)
+best = -0.36249474 epoch = 10
+
+2024-03-10 17:37:08.294463
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=64, seed=0, n_dims=96)
+best = -0.35628167 epoch = 12
+
+2024-03-10 17:37:36.716275
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=16, seed=0, n_dims=96)
+best = -0.369414 epoch = 15
+
+2024-03-10 17:38:00.241993
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.35064462 epoch = 28
+
+2024-03-10 18:10:48.881141
+Namespace(mode='test', dataset='water_quality', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.9125 epoch = 5
+
+2024-03-10 19:17:44.811315
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = 0.7986301369863014 epoch = 30
+
+2024-03-10 19:18:53.954819
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.8438356164383561 epoch = 49
+

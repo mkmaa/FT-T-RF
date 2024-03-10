@@ -17,51 +17,38 @@ from read_data import read_XTab_dataset_train, read_XTab_dataset_test
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone, _CLSEmbedding
 
 
-@torch.no_grad()
-def RandomFeaturePreprocess(
-        X_train: torch.Tensor, 
-        X_test: torch.Tensor, 
-        d_embedding: int, n_dims: int
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-    # print(f'Before RF {X_train.shape=}, {X_test.shape=}.')
-    n_samples_train = X_train.shape[0]
-    n_samples_test = X_test.shape[0]
-    X = torch.cat((X_train, X_test), dim=0)
-    weight = torch.empty(X.shape[1], d_embedding)
-    nn.init.kaiming_normal_(weight, mode='fan_out', nonlinearity='relu')
-    X = X[..., None] * weight
-    X = torch.sum(X, dim=1)
-    # print(f'{X.shape=}')
-    X = nn.ReLU()(X)
-    pca = PCA(n_components=n_dims)
-    X = torch.from_numpy(pca.fit_transform(X.cpu().numpy())).to(X.device)
-    # print(f'After RF {X.shape=}')
-    return torch.split(X, [n_samples_train, n_samples_test], dim=0)
-
-
-class FeatureTokenizer(nn.Module): # FT-T: CLS + linear embedding
-    def __init__(self, n_features: int, n_dims: int) -> None:
-        super().__init__()
+class RandomFeature(nn.Module):
+    def __init__(self, n_features: int, d_embedding: int, n_dims: int, n_ensemble: int):
+        super(RandomFeature, self).__init__()
+        self.d_embedding = d_embedding
+        self.n_dims = n_dims
+        self.clip_data_value = 27.6041
+        
         self.cls = _CLSEmbedding(n_dims)
-        self.weight = torch.nn.Parameter(torch.empty(n_features, n_dims))
-        self.bias = torch.nn.Parameter(torch.empty(n_features, n_dims))
-        self.reset_parameters()
+        self.rf = nn.ModuleList()
+        self.pca = []
+        for _ in range(n_ensemble):
+            rf_linear = nn.Linear(n_features, self.d_embedding, bias=True, dtype=torch.float32) # random feature
+            nn.init.kaiming_normal_(rf_linear.weight, mode="fan_out", nonlinearity="relu")
+            nn.init.zeros_(rf_linear.bias)
+            rf_linear.weight.requires_grad = False
+            rf_linear.bias.requires_grad = False
+            self.rf.append(nn.Sequential(rf_linear, nn.ReLU()))
+            self.pca.append(PCA(n_components=self.n_dims))
 
-    def reset_parameters(self) -> None:
-        d_rqsrt = self.weight.shape[1] ** -0.5
-        nn.init.uniform_(self.weight, -d_rqsrt, d_rqsrt)
-        nn.init.uniform_(self.bias, -d_rqsrt, d_rqsrt)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        if x.ndim < 2:
-            raise ValueError(
-                f'The input must have at least two dimensions, however: {x.ndim=}'
-            )
-        x_cls = self.cls(x.shape[:-1])
-        x = x[..., None] * self.weight
-        x = x + self.bias[None]
-        # print(f'{x_cls.shape=}, {x.shape=}')
-        return torch.cat([x_cls, x], dim=1)
+    def forward(self, x: torch.Tensor):
+        outputs = []
+        x_cls = self.cls(x.shape[:-1]).squeeze(dim=1)
+        # print(f'cls shape = {x_cls.shape}')
+        outputs.append(x_cls)
+        for rf, pca in zip(self.rf, self.pca):
+            with torch.no_grad():
+                x_rf = rf(x)
+            x_pca = torch.from_numpy(pca.fit_transform(x_rf.cpu().numpy())).to(x.device)
+            x_clamp = torch.clamp(x_pca, -self.clip_data_value, self.clip_data_value)
+            # print(f'clamp shape = {x_clamp.shape}')
+            outputs.append(x_clamp)
+        return torch.stack(outputs, dim=1)
 
 
 class ContrastiveHead(nn.Module):
@@ -102,8 +89,8 @@ class Model(nn.Module):
     def __init__(self, num_datasets, n_features_list, args):
         super(Model, self).__init__()
         self.num_datasets = num_datasets
-        self.ft = nn.ModuleList([
-            FeatureTokenizer(n_features=args.n_pca, n_dims=args.n_dims)for i in range(num_datasets)
+        self.rf = nn.ModuleList([
+            RandomFeature(n_features=n_features_list[i], d_embedding=args.d_embedding, n_dims=args.n_dims, n_ensemble=args.n_ensemble)for i in range(num_datasets)
         ])
         kwargs = FTTransformer.get_default_kwargs(n_blocks=args.n_blocks)
         del kwargs['_is_default']
@@ -120,7 +107,7 @@ class Model(nn.Module):
         contrast: list[torch.Tensor] = []
         prediction: list[torch.Tensor] = []
         for i in range(self.num_datasets):
-            x[i] = self.ft[i](x[i])
+            x[i] = self.rf[i](x[i])
             # print('rf shape =', x[i].shape)
             x[i] = self.backbone(x[i])
             # print('backbone shape =', x[i].shape)
@@ -138,7 +125,7 @@ def train(args):
     for dataset in args.training_dataset:
         print('Loading dataset', dataset, '...')
         task_type, X, Y, n = read_XTab_dataset_train(dataset)
-        if task_type == 'regression' or task_type == 'binclass':
+        if task_type == 'regression':
             dataX.append(X)
             dataY.append(Y)
             n_features_list.append(n)
@@ -194,8 +181,6 @@ def test(args):
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\' + args.dataset)
     #                                                # __public__\\Laptop_Prices_Dataset        abalone
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
-    X_train, X_test = RandomFeaturePreprocess(X_train, X_test, d_embedding=args.d_embedding, n_dims=args.n_pca)
-    print(f'Started training. After RF. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     
     if task_type != 'regression' and task_type != 'binclass':
         raise AssertionError('not regression or binclass')
@@ -209,7 +194,6 @@ def test(args):
     
     test_model = Model(num_datasets=1, n_features_list=[n], args=args).to(device)
     optimizer = optim.AdamW([
-        {'params': list(test_model.ft.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         {'params': list(test_model.backbone.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         # {'params': list(test_model.contrastive.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         {'params': list(test_model.supervised.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5}
@@ -237,15 +221,15 @@ def test(args):
     timer.run()
     for epoch in range(n_epochs):
         for batch in tqdm(
-            delu.iter_batches({'x': X_train, 'y': Y_train}, batch_size=batch_size, shuffle=True, drop_last=False),
+            delu.iter_batches({'x': X_train, 'y': Y_train}, batch_size=batch_size, shuffle=True, drop_last=True),
             desc=f"Epoch {epoch}",
-            total=math.ceil(X_train.shape[0]/batch_size),
+            total=math.floor(X_train.shape[0]/batch_size),
             ncols=80
         ):
             test_model.train()
             optimizer.zero_grad()
             _, prediction = test_model([batch['x']])
-            # print(f'{len(prediction)=}, {prediction[0].shape=}.')
+            # print(f'len pred = {len(prediction)}, shape pred = {prediction[0].shape}')
             loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
             # print(f'loss = {loss.item()}')
             loss.backward()
@@ -253,7 +237,7 @@ def test(args):
 
         test_model.eval()
         _, test_prediction = test_model([X_test])
-        
+
         y_pred = test_prediction[0].squeeze(dim=1).to('cpu').detach().numpy()
         y_true = Y_test.detach().numpy()
         
@@ -298,7 +282,7 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', type=str, default='False', choices=['True', 'False'], help='whether to use the pretrained value')
     parser.add_argument('--checkpoint', type=str, default='trained_backbone', help='pretrained checkpoint')
     parser.add_argument('--d_embedding', type=int, default=8192, help='embedding dim in RF')
-    parser.add_argument('--n_pca', type=int, default=8, help='pca dim')
+    parser.add_argument('--n_ensemble', type=int, default=8, help='ensemble num of RF')
     parser.add_argument('--n_blocks', type=int, default=1, choices=[1, 2, 3, 4, 5, 6], help='n_blocks in PCA and FT-T')
     parser.add_argument('--batch', type=int, default=256, help='batch size')
     parser.add_argument('--seed', type=int, default=0, help='random seed')
