@@ -15,6 +15,7 @@ from sklearn.decomposition import PCA
 
 from read_data import read_XTab_dataset_train, read_XTab_dataset_test
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone, _CLSEmbedding
+from loss import NTXent
 
 
 @torch.no_grad()
@@ -64,6 +65,23 @@ class FeatureTokenizer(nn.Module): # FT-T: CLS + linear embedding
         return torch.cat([x_cls, x], dim=1)
 
 
+class ReconstructionHead(nn.Module):
+    def __init__(self, d_in: int, d_out: int, bias: bool = True):
+        super(ReconstructionHead, self).__init__()
+        self.normalization = nn.LayerNorm(d_in)
+        self.activation = nn.ReLU()
+        self.linear1 = nn.Linear(d_in, d_in, bias)
+        self.linear2 = nn.Linear(d_in, d_out, bias)
+
+    def forward(self, x):
+        # x = x[:, :-1]
+        x = self.linear1(x)
+        x = self.normalization(x)
+        x = self.activation(x)
+        x = self.linear2(x)
+        return x
+
+
 class ContrastiveHead(nn.Module):
     def __init__(self, d_in: int, d_out: int, bias: bool = True):
         super(ContrastiveHead, self).__init__()
@@ -109,6 +127,9 @@ class Model(nn.Module):
         del kwargs['_is_default']
         kwargs['d_out'] = None # 1, or when multiclass, should be set to n_classes
         self.backbone = FTTransformerBackbone(**kwargs)
+        self.reconstruction = nn.ModuleList([
+            ReconstructionHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)
+        ]) if args.mode == 'train' else None
         self.contrastive = nn.ModuleList([
             ContrastiveHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)
         ]) if args.mode == 'train' else None
@@ -117,6 +138,7 @@ class Model(nn.Module):
         ])
 
     def forward(self, x: dict[torch.Tensor]) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
+        reconstruction: list[torch.Tensor] = []
         contrast: list[torch.Tensor] = []
         prediction: list[torch.Tensor] = []
         for i in range(self.num_datasets):
@@ -125,9 +147,10 @@ class Model(nn.Module):
             x[i] = self.backbone(x[i])
             # print('backbone shape =', x[i].shape)
             if self.contrastive != None:
+                reconstruction.append(self.reconstruction[i](x[i]))
                 contrast.append(self.contrastive[i](x[i]))
             prediction.append(self.supervised[i](x[i]))
-        return contrast, prediction
+        return reconstruction, contrast, prediction
 
 
 def train(args):
@@ -138,10 +161,11 @@ def train(args):
     for dataset in args.training_dataset:
         print('Loading dataset', dataset, '...')
         task_type, X, Y, n = read_XTab_dataset_train(dataset)
-        if task_type == 'regression' or task_type == 'binclass':
+        if task_type != 'multiclass' and X.shape[1] <= 8:
+            X, _ = RandomFeaturePreprocess(X, torch.Tensor(), d_embedding=args.d_embedding, n_dims=args.n_pca)
             dataX.append(X)
             dataY.append(Y)
-            n_features_list.append(n)
+            n_features_list.append(args.n_pca)
             n_samples += X.shape[0]
             print('| Loaded,', X.shape[0], 'samples,', X.shape[1], 'features.')
         else:
@@ -153,7 +177,10 @@ def train(args):
     
     model = Model(num_datasets, n_features_list, args)
     optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-5)
-    criterion = (
+    
+    ReconstructionLoss = func.mse_loss
+    ContrastiveLoss = NTXent()
+    SupervisedLoss = (
         func.binary_cross_entropy_with_logits
         if task_type == "binclass"
         else func.cross_entropy
@@ -168,19 +195,22 @@ def train(args):
         optimizer.zero_grad()
         data = copy.deepcopy(dataX)
         
+        reconstruction: list[torch.Tensor] = []
         contrast: list[torch.Tensor]
         prediction: list[torch.Tensor]
-        contrast, prediction = model(data)
+        reconstruction, contrast, prediction = model(data)
         for i in range(num_datasets):
             prediction[i] = prediction[i].squeeze(dim=1)
         
-        contrastive_loss = sum(criterion(contrast[i], dataX[i]) for i in range(num_datasets))
-        supervised_loss = sum(criterion(prediction[i], dataY[i]) for i in range(num_datasets))
-        total_loss = contrastive_loss + supervised_loss
+        reconstruction_loss = sum(ReconstructionLoss(reconstruction[i], dataX[i]) for i in range(num_datasets))
+        contrastive_loss = sum(ContrastiveLoss(contrast[i], dataX[i]) for i in range(num_datasets))
+        supervised_loss = sum(SupervisedLoss(prediction[i], dataY[i]) for i in range(num_datasets))
+        total_loss = reconstruction_loss + contrastive_loss + supervised_loss
         
         print('epoch =', epoch)
-        print('| contr loss =', contrastive_loss)
-        print('| supvi loss =', supervised_loss)
+        print('| reconstruction loss =', reconstruction_loss)
+        print('| contrastive    loss =', contrastive_loss)
+        print('| supervisd      loss =', supervised_loss)
         print('| total loss =', total_loss)
         print(f'| [time] {timer}')
 
@@ -244,7 +274,7 @@ def test(args):
         ):
             test_model.train()
             optimizer.zero_grad()
-            _, prediction = test_model([batch['x']])
+            _, _, prediction = test_model([batch['x']])
             # print(f'{len(prediction)=}, {prediction[0].shape=}.')
             loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
             # print(f'loss = {loss.item()}')
@@ -252,7 +282,7 @@ def test(args):
             optimizer.step()
 
         test_model.eval()
-        _, test_prediction = test_model([X_test])
+        _, _, test_prediction = test_model([X_test])
         
         y_pred = test_prediction[0].squeeze(dim=1).to('cpu').detach().numpy()
         y_true = Y_test.detach().numpy()
