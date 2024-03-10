@@ -137,7 +137,7 @@ class Model(nn.Module):
             SupervisedHead(d_in=args.n_dims, d_out=1) for i in range(num_datasets)
         ])
 
-    def forward(self, x: dict[torch.Tensor]) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
+    def forward(self, x):
         reconstruction: list[torch.Tensor] = []
         contrast: list[torch.Tensor] = []
         prediction: list[torch.Tensor] = []
@@ -161,7 +161,7 @@ def train(args):
     for dataset in args.training_dataset:
         print('Loading dataset', dataset, '...')
         task_type, X, Y, n = read_XTab_dataset_train(dataset)
-        if task_type != 'multiclass' and X.shape[1] <= 8:
+        if task_type != 'multiclass' and X.shape[1] <= 4:
             X, _ = RandomFeaturePreprocess(X, torch.Tensor(), d_embedding=args.d_embedding, n_dims=args.n_pca)
             dataX.append(X)
             dataY.append(Y)
@@ -191,7 +191,7 @@ def train(args):
     
     model.train()
     timer.run()
-    for epoch in range(100):
+    for epoch in range(1):
         optimizer.zero_grad()
         data = copy.deepcopy(dataX)
         
@@ -328,7 +328,7 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', type=str, default='False', choices=['True', 'False'], help='whether to use the pretrained value')
     parser.add_argument('--checkpoint', type=str, default='trained_backbone', help='pretrained checkpoint')
     parser.add_argument('--d_embedding', type=int, default=8192, help='embedding dim in RF')
-    parser.add_argument('--n_pca', type=int, default=8, help='pca dim')
+    parser.add_argument('--n_pca', type=int, default=96, help='pca dim')
     parser.add_argument('--n_blocks', type=int, default=1, choices=[1, 2, 3, 4, 5, 6], help='n_blocks in PCA and FT-T')
     parser.add_argument('--batch', type=int, default=256, help='batch size')
     parser.add_argument('--seed', type=int, default=0, help='random seed')
