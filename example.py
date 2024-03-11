@@ -223,12 +223,12 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
     parser.add_argument('--dataset', type=str, help='dataset')
-    parser.add_argument('--rf_in', type=str, choices=['True', 'False'], help='inner random feature, replace feature tokenizer')
-    parser.add_argument('--rf_out', type=str, choices=['True', 'False'], help='outler random feature, work with feature tokenizer')
-    parser.add_argument('--bias', type=str, choices=['True', 'False'], help='bias, only in uniform init')
+    parser.add_argument('--rf_in', type=str, default='False', choices=['True', 'False'], help='inner random feature, replace feature tokenizer')
+    parser.add_argument('--rf_out', type=str, default='False', choices=['True', 'False'], help='outler random feature, work with feature tokenizer')
+    parser.add_argument('--bias', type=str, default='True', choices=['True', 'False'], help='bias, only in uniform init')
     parser.add_argument('--activation', type=str, default='ReGLU', choices=['ReGLU', 'ReLU'], help='ReGLU or ReLU')
-    parser.add_argument('--init', type=str, choices=['xavier_uniform', 'xavier_normal', 'kaiming_uniform', 'kaiming_normal'], help='Xavier or Kaiming, uniform or normal')
-    parser.add_argument('--fan', type=str, choices=['fan_in', 'fan_out'], help='fan_in or fan_out, only in Kaiming init')
+    parser.add_argument('--init', type=str, default='xavier_uniform', choices=['xavier_uniform', 'xavier_normal', 'kaiming_uniform', 'kaiming_normal'], help='Xavier or Kaiming, uniform or normal')
+    parser.add_argument('--fan', type=str, default='fan_out', choices=['fan_in', 'fan_out'], help='fan_in or fan_out, only in Kaiming init')
     parser.add_argument('--n_blocks', type=int, default=3, choices=[1, 2, 3, 4, 5, 6], help='n_blocks of token embedding in FT-T')
     
     parser.add_argument('--normalization', type=str, default='standard', help='Normalization method')

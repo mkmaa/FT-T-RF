@@ -189,6 +189,14 @@ def train(args):
     )
     timer = delu.tools.Timer()
     
+    if args.load_checkpoint == 'True':
+        checkpoint = torch.load('checkpoints/checkpoint.tar')
+        model.load_state_dict(checkpoint['model'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
+        start_epoch = checkpoint(['epoch'])
+    else:
+        start_epoch = 0
+    
     model.train()
     timer.run()
     for epoch in range(1):
@@ -207,7 +215,7 @@ def train(args):
         supervised_loss = sum(SupervisedLoss(prediction[i], dataY[i]) for i in range(num_datasets))
         total_loss = reconstruction_loss + contrastive_loss + supervised_loss
         
-        print('epoch =', epoch)
+        print('epoch =', epoch + start_epoch)
         print('| reconstruction loss =', reconstruction_loss)
         print('| contrastive    loss =', contrastive_loss)
         print('| supervisd      loss =', supervised_loss)
@@ -216,6 +224,8 @@ def train(args):
 
         total_loss.backward()
         optimizer.step()
+        state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict(), 'epoch': epoch + start_epoch}
+        torch.save(state, 'checkpoints/checkpoint.tar')
     torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
     # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
 
@@ -256,7 +266,7 @@ def test(args):
         test_model.backbone.load_state_dict(torch.load('checkpoints\\' + args.checkpoint + '.pth'))
     
     n_epochs = 1000000
-    patience = 16
+    patience = 32
     batch_size = args.batch
 
     timer = delu.tools.Timer()
@@ -327,6 +337,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, help='choose the dataset')
     parser.add_argument('--pretrain', type=str, default='False', choices=['True', 'False'], help='whether to use the pretrained value')
     parser.add_argument('--checkpoint', type=str, default='trained_backbone', help='pretrained checkpoint')
+    parser.add_argument('--load_checkpoint', type=str, default='False', choices=['True', 'False'], help='continue to train')
     parser.add_argument('--d_embedding', type=int, default=8192, help='embedding dim in RF')
     parser.add_argument('--n_pca', type=int, default=96, help='pca dim')
     parser.add_argument('--n_blocks', type=int, default=1, choices=[1, 2, 3, 4, 5, 6], help='n_blocks in PCA and FT-T')

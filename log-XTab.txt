@@ -194,3 +194,115 @@ best = 0.7986301369863014 epoch = 30
 Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
 best = 0.8438356164383561 epoch = 49
 
+2024-03-10 23:18:13.338276
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.7663551401869159 epoch = 24
+
+2024-03-10 23:20:58.071962
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = 0.7429906542056075 epoch = 22
+
+2024-03-10 23:31:33.189631
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.8886075949367088 epoch = 27
+
+2024-03-10 23:32:29.719077
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=1, n_dims=96)
+best = 0.8835443037974684 epoch = 20
+
+2024-03-10 23:34:18.860184
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=8, n_blocks=1, batch=256, seed=0, n_dims=96)
+best = 0.7873417721518987 epoch = 9
+
+2024-03-10 23:46:14.343434
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.7822784810126582 epoch = 42
+
+2024-03-10 23:52:43.026986
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.7476635514018691 epoch = 14
+
+2024-03-10 23:58:21.864412
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=1, n_dims=96)
+best = 0.8835443037974684 epoch = 20
+
+2024-03-11 00:00:26.551502
+Namespace(mode='test', dataset='../c131', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=1, n_dims=96)
+best = 0.8860759493670886 epoch = 24
+
+2024-03-11 00:01:00.959248
+Namespace(mode='test', dataset='../Basketball_c', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=1, n_dims=96)
+best = 0.7570093457943925 epoch = 12
+
+2024-03-11 00:01:25.502672
+Namespace(mode='test', dataset='../Basketball_c', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.7570093457943925 epoch = 30
+
+2024-03-11 00:01:53.113042
+Namespace(mode='test', dataset='../Basketball_c', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=1029, n_dims=96)
+best = 0.7757009345794392 epoch = 31
+
+2024-03-11 00:02:22.412860
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=1029, n_dims=96)
+best = 0.7663551401869159 epoch = 17
+
+2024-03-11 00:04:57.795361
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.7663551401869159 epoch = 24
+
+2024-03-11 00:56:57.346655
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.44996232 epoch = 34
+
+2024-03-11 00:58:49.652099
+Namespace(mode='test', dataset='Student_Performance', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.41474912 epoch = 72
+
+2024-03-11 00:59:51.699311
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.35064462 epoch = 28
+
+2024-03-11 01:12:24.552897
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.6194509 epoch = 62
+
+2024-03-11 01:13:59.980005
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.31224623 epoch = 27
+
+2024-03-11 01:15:15.301749
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.31224623 epoch = 27
+
+2024-03-11 01:19:55.667748
+Namespace(mode='test', dataset='../cpu_small', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.024464812 epoch = 103
+
+2024-03-11 01:40:11.785015
+Namespace(mode='test', dataset='../cpu_small', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = -0.40086856 epoch = 14
+
+2024-03-11 01:41:52.867527
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.8438356164383561 epoch = 49
+
+2024-03-11 01:44:01.847902
+Namespace(mode='test', dataset='water_quality', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.9125 epoch = 5
+
+2024-03-11 01:45:31.635773
+Namespace(mode='test', dataset='water_quality', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.909375 epoch = 5
+
+2024-03-11 01:46:56.701745
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='True', checkpoint='trained_backbone', d_embedding=8192, n_pca=96, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.8410958904109589 epoch = 49
+
+2024-03-11 01:59:55.429001
+Namespace(mode='test', dataset='water_quality', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.890625 epoch = 0
+
+2024-03-11 02:19:37.243834
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', d_embedding=8192, n_ensemble=16, n_blocks=1, batch=128, seed=0, n_dims=96)
+best = 0.7698630136986301 epoch = 19
+
