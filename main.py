@@ -24,14 +24,15 @@ def RandomFeaturePreprocess(
         X_test: torch.Tensor, 
         d_embedding: int, n_dims: int
     ) -> tuple[torch.Tensor, torch.Tensor]:
-    # print(f'Before RF {X_train.shape=}, {X_test.shape=}.')
     n_samples_train = X_train.shape[0]
     n_samples_test = X_test.shape[0]
     X = torch.cat((X_train, X_test), dim=0)
     weight = torch.empty(X.shape[1], d_embedding)
+    # print(f'{X.shape=}, {weight.shape=}')
     nn.init.kaiming_normal_(weight, mode='fan_out', nonlinearity='relu')
-    X = X[..., None] * weight
-    X = torch.sum(X, dim=1)
+    # X = X[..., None] * weight
+    # X = torch.sum(X, dim=1)
+    X = torch.einsum('ijk,jl->ikl', X[..., None], weight).squeeze(dim=1)
     # print(f'{X.shape=}')
     X = nn.ReLU()(X)
     pca = PCA(n_components=n_dims)
@@ -154,15 +155,17 @@ class Model(nn.Module):
 
 
 def train(args):
+    task_type: list[str] = []
     dataX: list[torch.Tensor] = []
     dataY: list[torch.Tensor] = []
     n_features_list: list[int] = []
     n_samples: int = 0
     for dataset in args.training_dataset:
         print('Loading dataset', dataset, '...')
-        task_type, X, Y, n = read_XTab_dataset_train(dataset)
-        if task_type != 'multiclass' and X.shape[1] <= 4:
+        t, X, Y, n = read_XTab_dataset_train(dataset)
+        if t != 'multiclass' and X.shape[1] <= 4:
             X, _ = RandomFeaturePreprocess(X, torch.Tensor(), d_embedding=args.d_embedding, n_dims=args.n_pca)
+            task_type.append(t)
             dataX.append(X)
             dataY.append(Y)
             n_features_list.append(args.n_pca)
@@ -180,26 +183,20 @@ def train(args):
     
     ReconstructionLoss = func.mse_loss
     ContrastiveLoss = NTXent()
-    SupervisedLoss = (
-        func.binary_cross_entropy_with_logits
-        if task_type == "binclass"
-        else func.cross_entropy
-        if task_type == "multiclass"
-        else func.mse_loss
-    )
+    SupervisedLoss = {'binclass': func.binary_cross_entropy_with_logits, 'regression': func.mse_loss}
     timer = delu.tools.Timer()
     
     if args.load_checkpoint == 'True':
         checkpoint = torch.load('checkpoints/checkpoint.tar')
         model.load_state_dict(checkpoint['model'])
         optimizer.load_state_dict(checkpoint['optimizer'])
-        start_epoch = checkpoint(['epoch'])
+        start_epoch = checkpoint['epoch']
     else:
         start_epoch = 0
     
     model.train()
     timer.run()
-    for epoch in range(1):
+    for epoch in range(100):
         optimizer.zero_grad()
         data = copy.deepcopy(dataX)
         
@@ -212,7 +209,7 @@ def train(args):
         
         reconstruction_loss = sum(ReconstructionLoss(reconstruction[i], dataX[i]) for i in range(num_datasets))
         contrastive_loss = sum(ContrastiveLoss(contrast[i], dataX[i]) for i in range(num_datasets))
-        supervised_loss = sum(SupervisedLoss(prediction[i], dataY[i]) for i in range(num_datasets))
+        supervised_loss = sum(SupervisedLoss[task_type[i]](prediction[i], dataY[i]) for i in range(num_datasets))
         total_loss = reconstruction_loss + contrastive_loss + supervised_loss
         
         print('epoch =', epoch + start_epoch)

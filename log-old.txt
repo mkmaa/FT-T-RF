@@ -694,7 +694,7 @@ best = -0.40762237 epoch = 83
 Experiment Result
 
 Laptop_Prices_Dataset
-Student_Performance        X
+../UJIndoorLoc
 ../communities_and_crime
 ../cpu_small
 
@@ -706,12 +706,12 @@ water_quality
 Dataset         LR          MLP         XGBoost     FT-T        HyperFast       FT-T RF in      FT-T + RF       FT-T + RF + pretrain
 
 Laptop_Prices   0.37084     0.22290     0.28985     0.31523     None            0.44996         0.31224
-Student_Perf    0.27998     0.30885     0.23977     0.38161     None            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+UJIndoorLoc     1e+23       0.06001     0.01158     0.0092      None            0.6003          0.01046
 communities     0.33691     0.51621     0.40306     0.35271     None            0.61945         0.35064
 cpu_small       0.27757     0.02521     0.02198     0.02814     None            0.40086         0.02446
 
-water_quality   0.88437     0.89062     0.88500     0.90937                     0.89062         0.91250         0.90937
-ada_agnostic    0.86089     0.83023     0.84994     0.83150                     0.76986         0.84383         0.84109
+water_quality   0.88437     0.89062     0.88500     0.90937     0.89250         0.89062         0.91250         0.90937
+ada_agnostic    0.86089     0.83023     0.84994     0.83150     0.85432         0.76986         0.84383         0.84109
 Basketball_c    0.70370     0.72222     0.74074     0.76168     0.64814         0.74766         0.76635         0.75700
 c131(pumpkin)   0.88514     0.88910     0.87524     0.88101     0.87722         0.78227         0.88354         0.88607
 
