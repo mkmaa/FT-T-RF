@@ -30,9 +30,9 @@ def RandomFeaturePreprocess(
     weight = torch.empty(X.shape[1], d_embedding)
     # print(f'{X.shape=}, {weight.shape=}')
     nn.init.kaiming_normal_(weight, mode='fan_out', nonlinearity='relu')
-    # X = X[..., None] * weight
-    # X = torch.sum(X, dim=1)
-    X = torch.einsum('ijk,jl->ikl', X[..., None], weight).squeeze(dim=1)
+    X = X[..., None] * weight
+    X = torch.sum(X, dim=1)
+    # X = torch.einsum('ijk,jl->ikl', X[..., None], weight).squeeze(dim=1)
     # print(f'{X.shape=}')
     X = nn.ReLU()(X)
     pca = PCA(n_components=n_dims)
@@ -163,7 +163,7 @@ def train(args):
     for dataset in args.training_dataset:
         print('Loading dataset', dataset, '...')
         t, X, Y, n = read_XTab_dataset_train(dataset)
-        if t != 'multiclass' and X.shape[1] <= 4:
+        if (t == 'binclass' or t == 'regression') and X.shape[1] <= 4:
             X, _ = RandomFeaturePreprocess(X, torch.Tensor(), d_embedding=args.d_embedding, n_dims=args.n_pca)
             task_type.append(t)
             dataX.append(X)
@@ -184,7 +184,8 @@ def train(args):
     ReconstructionLoss = func.mse_loss
     ContrastiveLoss = NTXent()
     SupervisedLoss = {'binclass': func.binary_cross_entropy_with_logits, 'regression': func.mse_loss}
-    timer = delu.tools.Timer()
+    # timer = delu.tools.Timer()
+    start_time = datetime.now()
     
     if args.load_checkpoint == 'True':
         checkpoint = torch.load('checkpoints/checkpoint.tar')
@@ -195,8 +196,8 @@ def train(args):
         start_epoch = 0
     
     model.train()
-    timer.run()
-    for epoch in range(100):
+    # timer.run()
+    for epoch in range(3):
         optimizer.zero_grad()
         data = copy.deepcopy(dataX)
         
@@ -213,18 +214,20 @@ def train(args):
         total_loss = reconstruction_loss + contrastive_loss + supervised_loss
         
         print('epoch =', epoch + start_epoch)
-        print('| reconstruction loss =', reconstruction_loss)
-        print('| contrastive    loss =', contrastive_loss)
-        print('| supervisd      loss =', supervised_loss)
-        print('| total loss =', total_loss)
-        print(f'| [time] {timer}')
+        print('| reconstruction loss =', reconstruction_loss.item())
+        print('| contrastive    loss =', contrastive_loss.item())
+        print('| supervisd      loss =', supervised_loss.item())
+        print('| total loss =', total_loss.item())
+        print(f'| [time] {datetime.now() - start_time}')
 
         total_loss.backward()
         optimizer.step()
         state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict(), 'epoch': epoch + start_epoch}
         torch.save(state, 'checkpoints/checkpoint.tar')
+        torch.save(model.backbone.state_dict(), 'checkpoints/checkpoint_backbone.pth')
     torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
-    # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
+    for i in range(num_datasets):
+        torch.save(model.supervised[i].state_dict(), f'checkpoints/headers/{i}.pth')
 
 
 def test(args):
@@ -349,6 +352,7 @@ if __name__ == "__main__":
             'abalone','Abalone_Dataset','ada_agnostic','Airfoil_Self-Noise','airfoil_self_noise','banknote_authentication','Bank_Customer_Churn_Dataset','Basketball_c','Bias_correction_of_numerical_prediction_model_temperature_forecast','Bias_correction_r','Bias_correction_r_2','bias_correction_ucl','BLE_RSSI_dataset_for_Indoor_localization','blogfeedback','BNG','c130','c131','c6','c7','c8','CDC_Diabetes_Health_Indicators','churn','communities_and_crime','Communities_and_Crime_Unnormalized','company_bankruptcy_prediction','cpmp-2015','cpu_small','Credit_c','Customer_Personality_Analysis','customer_satisfaction_in_airline','dabetes_130-us_hospitals','Data_Science_for_Good_Kiva_Crowdfunding','Data_Science_Salaries','delta_elevators','Diamonds','drug_consumption','dry_bean_dataset','E-CommereShippingData','eeg_eye_state','Facebook_Comment_Volume','Facebook_Comment_Volume_','Firm-Teacher_Clave-Direction_Classification','Fitness Club_c','Food_Delivery_Time','Gender_Gap_in_Spanish_WP','gina_agnostic','golf_play_dataset_extended','Healthcare_Insurance','Heart_Failure_Prediction','HR_Analytics_Job_Change_of_Data_Scientists','IBM_HR_Analytics_Employee_Attrition_and_Performance','in-vehicle-coupon-recommendation','INNHotelsGroup','insurance','irish','jm1','kc1','kc2','Large-scale_Wave_Energy_Farm_Perth_100','Large-scale_Wave_Energy_Farm_Perth_49','Large-scale_Wave_Energy_Farm_Sydney_100','Large-scale_Wave_Energy_Farm_Sydney_49','letter_recognition','maternal_health_risk','mice_protein_expression','Mobile_Phone_Market_in_Ghana','NHANES_age_prediction','obesity_estimation','objectivity_analysis','Parkinson_Multiple_Sound_Recording','pbc','pc1','pc3','pc4','phoneme','Physicochemical_Properties_of_Protein_Tertiary_Structure','Physicochemical_r','Pima_Indians_Diabetes_Database','productivity_prediction','qsar_aquatic_toxicity','QSAR_biodegradation','r29','r30','r36','Rain_in_Australia','rice_cammeo_and_osmancik','sensory','Smoking_and_Drinking_Dataset_with_body_signal','steel_industry_data','steel_industry_energy_consumption','steel_plates_faults','stock','Student_Alcohol_Consumption','superconductivity','Superconductivty','synchronous_machine','Telecom_Churn_Dataset','topo_2_1','turiye_student_evaluation','UJIndoorLoc','UJI_Pen_Characters','wave_energy_farm','Website_Phishing','Wine_Quality_','Wine_Quality_red','Wine_Quality_white','yeast'
         ]
     
+    np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     delu.random.seed(args.seed)
     
