@@ -28,16 +28,11 @@ def RandomFeaturePreprocess(
     n_samples_test = X_test.shape[0]
     X = torch.cat((X_train, X_test), dim=0)
     weight = torch.empty(X.shape[1], d_embedding)
-    # print(f'{X.shape=}, {weight.shape=}')
     nn.init.kaiming_normal_(weight, mode='fan_out', nonlinearity='relu')
-    X = X[..., None] * weight
-    X = torch.sum(X, dim=1)
-    # X = torch.einsum('ijk,jl->ikl', X[..., None], weight).squeeze(dim=1)
-    # print(f'{X.shape=}')
+    X = X @ weight
     X = nn.ReLU()(X)
     pca = PCA(n_components=n_dims)
     X = torch.from_numpy(pca.fit_transform(X.cpu().numpy())).to(X.device)
-    # print(f'After RF {X.shape=}')
     return torch.split(X, [n_samples_train, n_samples_test], dim=0)
 
 
@@ -213,11 +208,11 @@ def train(args):
         supervised_loss = sum(SupervisedLoss[task_type[i]](prediction[i], dataY[i]) for i in range(num_datasets))
         total_loss = reconstruction_loss + contrastive_loss + supervised_loss
         
-        print('epoch =', epoch + start_epoch)
-        print('| reconstruction loss =', reconstruction_loss.item())
-        print('| contrastive    loss =', contrastive_loss.item())
-        print('| supervisd      loss =', supervised_loss.item())
-        print('| total loss =', total_loss.item())
+        print(f'epoch = {epoch + start_epoch}')
+        print(f'| reconstruction loss = {reconstruction_loss.item():.7f}')
+        print(f'| contrastive    loss = {contrastive_loss.item():.7f}')
+        print(f'| supervisd      loss = {supervised_loss.item():.7f}')
+        print(f'| total loss = {total_loss.item():.7f}')
         print(f'| [time] {datetime.now() - start_time}')
 
         total_loss.backward()
@@ -232,7 +227,6 @@ def train(args):
 
 def test(args):
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\' + args.dataset)
-    #                                                # __public__\\Laptop_Prices_Dataset        abalone
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     X_train, X_test = RandomFeaturePreprocess(X_train, X_test, d_embedding=args.d_embedding, n_dims=args.n_pca)
     print(f'Started training. After RF. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
@@ -251,7 +245,6 @@ def test(args):
     optimizer = optim.AdamW([
         {'params': list(test_model.ft.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         {'params': list(test_model.backbone.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
-        # {'params': list(test_model.contrastive.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         {'params': list(test_model.supervised.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5}
     ])
     criterion = (
@@ -285,9 +278,7 @@ def test(args):
             test_model.train()
             optimizer.zero_grad()
             _, _, prediction = test_model([batch['x']])
-            # print(f'{len(prediction)=}, {prediction[0].shape=}.')
             loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
-            # print(f'loss = {loss.item()}')
             loss.backward()
             optimizer.step()
 
@@ -307,8 +298,7 @@ def test(args):
             assert task_type == "regression"
             score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
         
-        log = f" [score] {score:.4f}  [time] {timer}"
-
+        log = f" [score] {score:.7f}  [time] {timer}"
         if score > best_score:
             best_score = score
             best_epoch = epoch
@@ -340,7 +330,7 @@ if __name__ == "__main__":
     parser.add_argument('--load_checkpoint', type=str, default='False', choices=['True', 'False'], help='continue to train')
     parser.add_argument('--d_embedding', type=int, default=8192, help='embedding dim in RF')
     parser.add_argument('--n_pca', type=int, default=96, help='pca dim')
-    parser.add_argument('--n_blocks', type=int, default=1, choices=[1, 2, 3, 4, 5, 6], help='n_blocks in PCA and FT-T')
+    parser.add_argument('--n_blocks', type=int, default=3, choices=[1, 2, 3, 4, 5, 6], help='n_blocks in PCA and FT-T')
     parser.add_argument('--batch', type=int, default=256, help='batch size')
     parser.add_argument('--seed', type=int, default=0, help='random seed')
     
