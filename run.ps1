@@ -1,20 +1,17 @@
-$dataset = 'CA'
+$dataset = 'Laptop_Prices_Dataset', '../communities_and_crime', '../cpu_small', 'water_quality', '../ada_agnostic', '../Basketball_c', '../c131', '../UJIndoorLoc'
 $tf = "False", "True"
-# $init = "xavier_uniform", "xavier_normal", "kaiming_uniform", "kaiming_normal"
-# $fan = "fan_in", "fan_out"
 
-foreach ($data in $dataset) {
-    Add-Content -Path "log.txt" -Value "======== dataset: $data ========`n"
-    foreach ($rf in $tf) {
-        foreach ($bias in $tf) {
-            Add-Content -Path "log.txt" -Value "---- rf $rf - bias $bias ----`n"
-            D:/anaconda3/envs/pytorch/python.exe ./package/example.py --dataset $data --rf $rf --bias $bias --init xavier_uniform
-            D:/anaconda3/envs/pytorch/python.exe ./package/example.py --dataset $data --rf $rf --bias $bias --init xavier_normal
-            D:/anaconda3/envs/pytorch/python.exe ./package/example.py --dataset $data --rf $rf --bias $bias --init kaiming_uniform --fan fan_in
-            D:/anaconda3/envs/pytorch/python.exe ./package/example.py --dataset $data --rf $rf --bias $bias --init kaiming_uniform --fan fan_out
-            D:/anaconda3/envs/pytorch/python.exe ./package/example.py --dataset $data --rf $rf --bias $bias --init kaiming_normal --fan fan_in
-            D:/anaconda3/envs/pytorch/python.exe ./package/example.py --dataset $data --rf $rf --bias $bias --init kaiming_normal --fan fan_out
-        }
-    }
-    Add-Content -Path "log.txt" -Value "==============================`n"
-}
+# foreach ($data in $dataset) {
+#     # Add-Content -Path "log.txt" -Value "======== dataset: $data ========`n"
+#     # foreach ($rf in $tf) {
+#     #     foreach ($bias in $tf) {
+#             # Add-Content -Path "log.txt" -Value "---- rf $rf - bias $bias ----`n"
+#             # D:/anaconda3/envs/pytorch/python.exe ./example.py --dataset $data
+#             D:/anaconda3/envs/pytorch/python.exe ./main.py --dataset $data --pretrain True
+#     #     }
+#     # }
+#     # Add-Content -Path "log.txt" -Value "==============================`n"
+# }
+
+D:/anaconda3/envs/pytorch/python.exe ./main.py --dataset ../UJIndoorLoc --pretrain False 
+D:/anaconda3/envs/pytorch/python.exe ./example.py --dataset ../UJIndoorLoc

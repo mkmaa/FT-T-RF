@@ -74,3 +74,31 @@ Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\
 Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\water_quality', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
 {'val': 0.909375, 'test': 0.89375, 'epoch': 77}
 
+2024-03-12 13:20:07.172545
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\Laptop_Prices_Dataset', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.32718033, 'test': -0.26243755, 'epoch': 95}
+
+2024-03-12 13:38:36.422824
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../communities_and_crime', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.36951992, 'test': -0.31993818, 'epoch': 16}
+
+2024-03-12 13:44:47.756366
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../cpu_small', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.02381386, 'test': -0.022454746, 'epoch': 72}
+
+2024-03-12 14:10:21.645089
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\water_quality', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': 0.91171875, 'test': 0.89375, 'epoch': 35}
+
+2024-03-12 14:29:39.522036
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../ada_agnostic', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': 0.8534246575342466, 'test': 0.8554216867469879, 'epoch': 73}
+
+2024-03-12 14:36:32.433206
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../Basketball_c', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': 0.7616822429906542, 'test': 0.7222222222222222, 'epoch': 4}
+
+2024-03-12 14:40:08.443397
+Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../c131', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': 0.8886075949367088, 'test': 0.8792079207920792, 'epoch': 32}
+
