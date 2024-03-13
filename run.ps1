@@ -1,5 +1,5 @@
 # $dataset = 'Laptop_Prices_Dataset', '../communities_and_crime', '../cpu_small', 'water_quality', '../ada_agnostic', '../Basketball_c', '../c131', '../UJIndoorLoc'
-$dataset = 'water_quality', '../ada_agnostic', '../Basketball_c', '../c131'
+$dataset = '../ada_agnostic', '../Basketball_c', '../c131'
 $tf = "False", "True"
 
 foreach ($data in $dataset) {

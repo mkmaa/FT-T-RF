@@ -426,3 +426,23 @@ Score before fine tuning: -0.1510674.
 Namespace(mode='test', dataset='../cpu_small', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
 best = -0.04045148 epoch = 1
 
+Score before fine tuning: 0.8945312.
+2024-03-13 15:50:13.563478
+Namespace(mode='test', dataset='water_quality', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.90625 epoch = 4
+
+Score before fine tuning: 0.8123288.
+2024-03-13 15:55:35.958261
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.836986301369863 epoch = 10
+
+Score before fine tuning: 0.7289720.
+2024-03-13 15:57:33.541942
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.7336448598130841 epoch = 13
+
+Score before fine tuning: 0.8759494.
+2024-03-13 16:00:49.446799
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8810126582278481 epoch = 15
+
