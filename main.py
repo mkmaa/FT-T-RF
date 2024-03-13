@@ -376,6 +376,9 @@ def test_leastsq(args):
     if task_type != 'regression' and task_type != 'binclass':
         raise AssertionError('not regression or binclass')
     
+    if task_type == 'binclass':
+        Y_train = Y_train * 2 - 1
+    
     # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     device = torch.device('cpu')
     print(f'device: {device}')
@@ -407,18 +410,15 @@ def test_leastsq(args):
         X_train_emb = torch.cat(X_train_emb, dim=0)
         X_test_emb = torch.cat(X_test_emb, dim=0)
         print(f'{X_train_emb.shape=}, {X_test_emb.shape=}')
+        
+        # LR = LinearRegression()
+        # LR.fit(X_train_emb, Y_train)
+        # LR_pred = LR.predict(X_test_emb)
+        # score_LR = Evaluate(task_type, LR_pred, Y_test)  # equal to LeastSquare score
+        
         Y_test_pred = LeastSquare(X_train_emb, Y_train, X_test_emb).detach().numpy()
-    
-        # if task_type == "binclass":
-        #     Y_test_pred = np.round(scipy.special.expit(Y_test_pred))
-        #     score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
-        # elif task_type == "multiclass":
-        #     Y_test_pred = Y_test_pred.argmax(1)
-        #     score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
-        # else:
-        #     assert task_type == "regression"
-        #     score_before = -(sklearn.metrics.mean_squared_error(Y_test, Y_test_pred))
         score_before = Evaluate(task_type, Y_test_pred, Y_test)
+        
         print(f'Score before fine tuning: {score_before:.7f}.')
         with open("log-XTab.txt", "a") as f:
             print(f'Score before fine tuning: {score_before:.7f}.', file=f)
@@ -462,15 +462,6 @@ def test_leastsq(args):
             y_pred = LeastSquare(X_train_emb, Y_train, X_test_emb).detach().numpy()
             y_true = Y_test.detach().numpy()
             
-            # if task_type == "binclass":
-            #     y_pred = np.round(scipy.special.expit(y_pred))
-            #     score = sklearn.metrics.accuracy_score(y_true, y_pred)
-            # elif task_type == "multiclass":
-            #     y_pred = y_pred.argmax(1)
-            #     score = sklearn.metrics.accuracy_score(y_true, y_pred)
-            # else:
-            #     assert task_type == "regression"
-            #     score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
             score = Evaluate(task_type, y_pred, y_true)
             
             log = f" [score] {score:.7f}  [time] {timer}"
