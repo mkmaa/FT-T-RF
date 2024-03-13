@@ -402,3 +402,7 @@ best = 0.8860759493670886 epoch = 14
 Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='True', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
 best = -0.009456999 epoch = 63
 
+2024-03-13 04:27:02.867899
+Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.0074778395 epoch = 176
+

@@ -165,7 +165,7 @@ def main(args):
             score = -(sklearn.metrics.mean_squared_error(y_true, y_pred)) # mse, after preprocessing
         return score  # The higher -- the better.
 
-    print(f'Test score before training: {evaluate("test"):.4f}')
+    print(f'Test score before training: {evaluate("test"):.7f}')
 
     # For demonstration purposes (fast training and bad performance),
     # one can set smaller values:
@@ -201,7 +201,7 @@ def main(args):
 
         val_score = evaluate("val")
         test_score = evaluate("test")
-        print(f"(val) {val_score:.4f} (test) {test_score:.4f} [time] {timer}")
+        print(f"(val) {val_score:.7f} (test) {test_score:.7f} [time] {timer}")
 
         early_stopping.update(val_score)
         if epoch >= 80 and early_stopping.should_stop():
