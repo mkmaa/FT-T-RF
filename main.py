@@ -36,7 +36,21 @@ def RandomFeaturePreprocess(
     return torch.split(X, [n_samples_train, n_samples_test], dim=0)
 
 
-def LeastSquare(X_train, Y_train, X_test, alpha=0.1):
+@torch.no_grad()
+def Evaluate(task_type, y_pred, y_true):
+    if task_type == "binclass":
+        y_pred = np.round(scipy.special.expit(y_pred))
+        score = sklearn.metrics.accuracy_score(y_true, y_pred)
+    elif task_type == "multiclass":
+        y_pred = y_pred.argmax(1)
+        score = sklearn.metrics.accuracy_score(y_true, y_pred)
+    else:
+        assert task_type == "regression"
+        score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
+    return score
+
+
+def LeastSquare(X_train, Y_train, X_test, alpha=0.0):
     X_train = torch.cat((X_train, torch.ones(X_train.shape[0], 1)), dim=1)
     X_test = torch.cat((X_test, torch.ones(X_test.shape[0], 1)), dim=1)
     I = torch.eye(X_train.shape[1])
@@ -319,15 +333,16 @@ def test(args):
         y_pred = test_prediction[0].squeeze(dim=1).to('cpu').detach().numpy()
         y_true = Y_test.detach().numpy()
         
-        if task_type == "binclass":
-            y_pred = np.round(scipy.special.expit(y_pred))
-            score = sklearn.metrics.accuracy_score(y_true, y_pred)
-        elif task_type == "multiclass":
-            y_pred = y_pred.argmax(1)
-            score = sklearn.metrics.accuracy_score(y_true, y_pred)
-        else:
-            assert task_type == "regression"
-            score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
+        # if task_type == "binclass":
+        #     y_pred = np.round(scipy.special.expit(y_pred))
+        #     score = sklearn.metrics.accuracy_score(y_true, y_pred)
+        # elif task_type == "multiclass":
+        #     y_pred = y_pred.argmax(1)
+        #     score = sklearn.metrics.accuracy_score(y_true, y_pred)
+        # else:
+        #     assert task_type == "regression"
+        #     score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
+        score = Evaluate(task_type, y_pred, y_true)
         
         log = f" [score] {score:.7f}  [time] {timer}"
         if score > best_score:
@@ -382,86 +397,103 @@ def test_leastsq(args):
         else func.mse_loss
     )
     
-    X_train_emb = torch.Tensor()
-    X_test_emb = torch.Tensor()
-    for i in range(math.ceil(X_train.shape[0]/args.batch)):
-        X_train_emb = torch.cat([X_train_emb, test_model(X_train[i * args.batch : (i + 1) * args.batch])], dim=0)
-    for i in range(math.ceil(X_test.shape[0]/args.batch)):
-        X_test_emb = torch.cat([X_test_emb, test_model(X_test[i * args.batch : (i + 1) * args.batch])], dim=0)
-    print(f'{X_train_emb.shape=}, {X_test_emb.shape=}')
-    Y_test_pred = LeastSquare(X_train_emb, Y_train, X_test_emb).detach().numpy()
-    if task_type == "binclass":
-        Y_test_pred = np.round(scipy.special.expit(Y_test_pred))
-        score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
-    elif task_type == "multiclass":
-        Y_test_pred = Y_test_pred.argmax(1)
-        score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
-    else:
-        assert task_type == "regression"
-        score_before = -(sklearn.metrics.mean_squared_error(Y_test, Y_test_pred))
-    print(f'Score before fine tuning: {score_before:.7f}.')
+    with torch.no_grad():
+        X_train_emb: list[torch.Tensor] = []
+        X_test_emb: list[torch.Tensor] = []
+        for i in tqdm(range(math.ceil(X_train.shape[0]/args.batch))):
+            X_train_emb.append(test_model(X_train[i * args.batch : (i + 1) * args.batch]))
+        for i in tqdm(range(math.ceil(X_test.shape[0]/args.batch))):
+            X_test_emb.append(test_model(X_test[i * args.batch : (i + 1) * args.batch]))
+        X_train_emb = torch.cat(X_train_emb, dim=0)
+        X_test_emb = torch.cat(X_test_emb, dim=0)
+        print(f'{X_train_emb.shape=}, {X_test_emb.shape=}')
+        Y_test_pred = LeastSquare(X_train_emb, Y_train, X_test_emb).detach().numpy()
     
-    # n_epochs = 1000000
-    # patience = 32
-    # batch_size = args.batch
-
-    # timer = delu.tools.Timer()
-    # early_stopping = delu.tools.EarlyStopping(patience, mode="max")
-    # best_score = -math.inf
-    # best_epoch = 0
+        # if task_type == "binclass":
+        #     Y_test_pred = np.round(scipy.special.expit(Y_test_pred))
+        #     score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
+        # elif task_type == "multiclass":
+        #     Y_test_pred = Y_test_pred.argmax(1)
+        #     score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
+        # else:
+        #     assert task_type == "regression"
+        #     score_before = -(sklearn.metrics.mean_squared_error(Y_test, Y_test_pred))
+        score_before = Evaluate(task_type, Y_test_pred, Y_test)
+        print(f'Score before fine tuning: {score_before:.7f}.')
+        with open("log-XTab.txt", "a") as f:
+            print(f'Score before fine tuning: {score_before:.7f}.', file=f)
     
-    # timer.run()
-    # for epoch in range(n_epochs):
-    #     for batch in tqdm(
-    #         delu.iter_batches({'x': X_train, 'y': Y_train}, batch_size=batch_size, shuffle=True, drop_last=False),
-    #         desc=f"Epoch {epoch}",
-    #         total=math.ceil(X_train.shape[0]/batch_size),
-    #         ncols=80
-    #     ):
-    #         test_model.train()
-    #         optimizer.zero_grad()
-    #         _, _, prediction = test_model([batch['x']])
-    #         loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
-    #         loss.backward()
-    #         optimizer.step()
+    n_epochs = 1000000
+    patience = 8
+    batch_size = args.batch
 
-    #     test_model.eval()
-    #     _, _, test_prediction = test_model([X_test])
+    timer = delu.tools.Timer()
+    early_stopping = delu.tools.EarlyStopping(patience, mode="max")
+    best_score = -math.inf
+    best_epoch = 0
+    
+    timer.run()
+    for epoch in range(n_epochs):
+        for batch in tqdm(
+            delu.iter_batches({'x': X_train, 'y': Y_train}, batch_size=batch_size, shuffle=True, drop_last=False),
+            desc=f"Epoch {epoch}",
+            total=math.ceil(X_train.shape[0]/batch_size),
+            ncols=80
+        ):
+            test_model.train()
+            optimizer.zero_grad()
+            X_emb = test_model(batch['x'])
+            y_pred = LeastSquare(X_emb, batch['y'], X_emb)
+            loss = criterion(y_pred, batch['y'])
+            loss.backward()
+            optimizer.step()
+
+        test_model.eval()
         
-    #     y_pred = test_prediction[0].squeeze(dim=1).to('cpu').detach().numpy()
-    #     y_true = Y_test.detach().numpy()
-        
-    #     if task_type == "binclass":
-    #         y_pred = np.round(scipy.special.expit(y_pred))
-    #         score = sklearn.metrics.accuracy_score(y_true, y_pred)
-    #     elif task_type == "multiclass":
-    #         y_pred = y_pred.argmax(1)
-    #         score = sklearn.metrics.accuracy_score(y_true, y_pred)
-    #     else:
-    #         assert task_type == "regression"
-    #         score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
-        
-    #     log = f" [score] {score:.7f}  [time] {timer}"
-    #     if score > best_score:
-    #         best_score = score
-    #         best_epoch = epoch
-    #         log = '🌸' + log
-    #     else:
-    #         log = '  ' + log
+        with torch.no_grad():
+            X_train_emb: list[torch.Tensor] = []
+            X_test_emb: list[torch.Tensor] = []
+            for i in range(math.ceil(X_train.shape[0]/args.batch)):
+                X_train_emb.append(test_model(X_train[i * args.batch : (i + 1) * args.batch]))
+            for i in range(math.ceil(X_test.shape[0]/args.batch)):
+                X_test_emb.append(test_model(X_test[i * args.batch : (i + 1) * args.batch]))
+            X_train_emb = torch.cat(X_train_emb, dim=0)
+            X_test_emb = torch.cat(X_test_emb, dim=0)
+            y_pred = LeastSquare(X_train_emb, Y_train, X_test_emb).detach().numpy()
+            y_true = Y_test.detach().numpy()
+            
+            # if task_type == "binclass":
+            #     y_pred = np.round(scipy.special.expit(y_pred))
+            #     score = sklearn.metrics.accuracy_score(y_true, y_pred)
+            # elif task_type == "multiclass":
+            #     y_pred = y_pred.argmax(1)
+            #     score = sklearn.metrics.accuracy_score(y_true, y_pred)
+            # else:
+            #     assert task_type == "regression"
+            #     score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
+            score = Evaluate(task_type, y_pred, y_true)
+            
+            log = f" [score] {score:.7f}  [time] {timer}"
+            if score > best_score:
+                best_score = score
+                best_epoch = epoch
+                log = '🌸' + log
+            else:
+                log = '  ' + log
 
-    #     print(log)
+            print(log)
 
-    #     early_stopping.update(score)
-    #     if epoch >= 10 and early_stopping.should_stop():
-    #         break
+        early_stopping.update(score)
+        if epoch >= 10 and early_stopping.should_stop():
+            break
 
-    # print("\n\nResult:")
-    # print('best =', best_score, 'epoch =', best_epoch)
-    # with open("log-XTab.txt", "a") as f:
-    #     print(datetime.now(), file=f)
-    #     print(args, file=f)
-    #     print('best =', best_score, 'epoch =', best_epoch, file=f)
-    #     print('', file=f)
+    print("\n\nResult:")
+    print('best =', best_score, 'epoch =', best_epoch)
+    with open("log-XTab.txt", "a") as f:
+        print(datetime.now(), file=f)
+        print(args, file=f)
+        print('best =', best_score, 'epoch =', best_epoch, file=f)
+        print('', file=f)
 
 
 if __name__ == "__main__":
