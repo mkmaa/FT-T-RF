@@ -36,6 +36,16 @@ def RandomFeaturePreprocess(
     return torch.split(X, [n_samples_train, n_samples_test], dim=0)
 
 
+def LeastSquare(X_train, Y_train, X_test, alpha=0.1):
+    X_train = torch.cat((X_train, torch.ones(X_train.shape[0], 1)), dim=1)
+    X_test = torch.cat((X_test, torch.ones(X_test.shape[0], 1)), dim=1)
+    I = torch.eye(X_train.shape[1])
+    X_pinv = torch.inverse(X_train.t() @ X_train + alpha * I) @ X_train.t()
+    theta = X_pinv @ Y_train
+    Y_pred = X_test @ theta
+    return Y_pred
+
+
 class FeatureTokenizer(nn.Module): # FT-T: CLS + linear embedding
     def __init__(self, n_features: int, n_dims: int) -> None:
         super().__init__()
@@ -115,9 +125,12 @@ class SupervisedHead(nn.Module):
 class Model(nn.Module):
     def __init__(self, num_datasets, n_features_list, args):
         super(Model, self).__init__()
+        if args.mode == 'test':
+            if num_datasets != 1:
+                raise AssertionError('testing multiple datasets')
         self.num_datasets = num_datasets
         self.ft = nn.ModuleList([
-            FeatureTokenizer(n_features=args.n_pca, n_dims=args.n_dims)for i in range(num_datasets)
+            FeatureTokenizer(n_features=args.n_pca, n_dims=args.n_dims) for _ in range(num_datasets)
         ])
         kwargs = FTTransformer.get_default_kwargs(n_blocks=args.n_blocks)
         del kwargs['_is_default']
@@ -130,7 +143,7 @@ class Model(nn.Module):
             ContrastiveHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)
         ]) if args.mode == 'train' else None
         self.supervised = nn.ModuleList([
-            SupervisedHead(d_in=args.n_dims, d_out=1) for i in range(num_datasets)
+            SupervisedHead(d_in=args.n_dims, d_out=1) for _ in range(num_datasets)
         ])
 
     def forward(self, x):
@@ -147,6 +160,24 @@ class Model(nn.Module):
                 contrast.append(self.contrastive[i](x[i]))
             prediction.append(self.supervised[i](x[i]))
         return reconstruction, contrast, prediction
+    
+
+class Model_leastsq(nn.Module):
+    def __init__(self, num_datasets, n_features_list, args):
+        super(Model_leastsq, self).__init__()
+        if args.mode != 'test' or num_datasets != 1:
+            raise AssertionError('testing multiple datasets')
+        self.num_datasets = num_datasets
+        self.ft = FeatureTokenizer(n_features=args.n_pca, n_dims=args.n_dims)
+        kwargs = FTTransformer.get_default_kwargs(n_blocks=args.n_blocks)
+        del kwargs['_is_default']
+        kwargs['d_out'] = None
+        self.backbone = FTTransformerBackbone(**kwargs)
+
+    def forward(self, X):
+        X = self.ft(X)
+        X = self.backbone(X)
+        return X
 
 
 def train(args):
@@ -321,6 +352,118 @@ def test(args):
         print('', file=f)
 
 
+def test_leastsq(args):
+    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\' + args.dataset)
+    print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
+    X_train, X_test = RandomFeaturePreprocess(X_train, X_test, d_embedding=args.d_embedding, n_dims=args.n_pca)
+    print(f'Started training. After RF. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
+    
+    if task_type != 'regression' and task_type != 'binclass':
+        raise AssertionError('not regression or binclass')
+    
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
+    print(f'device: {device}')
+    X_train = X_train.to(device)
+    X_test = X_test.to(device)
+    Y_train = Y_train.to(device)
+    
+    test_model = Model_leastsq(num_datasets=1, n_features_list=[n], args=args).to(device)
+    test_model.backbone.load_state_dict(torch.load('checkpoints\\' + args.checkpoint + '.pth'))
+    optimizer = optim.AdamW([
+        {'params': list(test_model.ft.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
+        {'params': list(test_model.backbone.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5}
+    ])
+    criterion = (
+        func.binary_cross_entropy_with_logits
+        if task_type == "binclass"
+        else func.cross_entropy
+        if task_type == "multiclass"
+        else func.mse_loss
+    )
+    
+    X_train_emb = torch.Tensor()
+    X_test_emb = torch.Tensor()
+    for i in range(math.ceil(X_train.shape[0]/args.batch)):
+        X_train_emb = torch.cat([X_train_emb, test_model(X_train[i * args.batch : (i + 1) * args.batch])], dim=0)
+    for i in range(math.ceil(X_test.shape[0]/args.batch)):
+        X_test_emb = torch.cat([X_test_emb, test_model(X_test[i * args.batch : (i + 1) * args.batch])], dim=0)
+    print(f'{X_train_emb.shape=}, {X_test_emb.shape=}')
+    Y_test_pred = LeastSquare(X_train_emb, Y_train, X_test_emb).detach().numpy()
+    if task_type == "binclass":
+        Y_test_pred = np.round(scipy.special.expit(Y_test_pred))
+        score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
+    elif task_type == "multiclass":
+        Y_test_pred = Y_test_pred.argmax(1)
+        score_before = sklearn.metrics.accuracy_score(Y_test, Y_test_pred)
+    else:
+        assert task_type == "regression"
+        score_before = -(sklearn.metrics.mean_squared_error(Y_test, Y_test_pred))
+    print(f'Score before fine tuning: {score_before:.7f}.')
+    
+    # n_epochs = 1000000
+    # patience = 32
+    # batch_size = args.batch
+
+    # timer = delu.tools.Timer()
+    # early_stopping = delu.tools.EarlyStopping(patience, mode="max")
+    # best_score = -math.inf
+    # best_epoch = 0
+    
+    # timer.run()
+    # for epoch in range(n_epochs):
+    #     for batch in tqdm(
+    #         delu.iter_batches({'x': X_train, 'y': Y_train}, batch_size=batch_size, shuffle=True, drop_last=False),
+    #         desc=f"Epoch {epoch}",
+    #         total=math.ceil(X_train.shape[0]/batch_size),
+    #         ncols=80
+    #     ):
+    #         test_model.train()
+    #         optimizer.zero_grad()
+    #         _, _, prediction = test_model([batch['x']])
+    #         loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
+    #         loss.backward()
+    #         optimizer.step()
+
+    #     test_model.eval()
+    #     _, _, test_prediction = test_model([X_test])
+        
+    #     y_pred = test_prediction[0].squeeze(dim=1).to('cpu').detach().numpy()
+    #     y_true = Y_test.detach().numpy()
+        
+    #     if task_type == "binclass":
+    #         y_pred = np.round(scipy.special.expit(y_pred))
+    #         score = sklearn.metrics.accuracy_score(y_true, y_pred)
+    #     elif task_type == "multiclass":
+    #         y_pred = y_pred.argmax(1)
+    #         score = sklearn.metrics.accuracy_score(y_true, y_pred)
+    #     else:
+    #         assert task_type == "regression"
+    #         score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
+        
+    #     log = f" [score] {score:.7f}  [time] {timer}"
+    #     if score > best_score:
+    #         best_score = score
+    #         best_epoch = epoch
+    #         log = '🌸' + log
+    #     else:
+    #         log = '  ' + log
+
+    #     print(log)
+
+    #     early_stopping.update(score)
+    #     if epoch >= 10 and early_stopping.should_stop():
+    #         break
+
+    # print("\n\nResult:")
+    # print('best =', best_score, 'epoch =', best_epoch)
+    # with open("log-XTab.txt", "a") as f:
+    #     print(datetime.now(), file=f)
+    #     print(args, file=f)
+    #     print('best =', best_score, 'epoch =', best_epoch, file=f)
+    #     print('', file=f)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
     parser.add_argument('--mode', type=str, default='test', choices=['train', 'test'], help='training or testing')
@@ -349,4 +492,5 @@ if __name__ == "__main__":
     if args.mode == 'train':
         train(args)
     else:
-        test(args)
+        # test(args)
+        test_leastsq(args)
