@@ -406,3 +406,23 @@ best = -0.009456999 epoch = 63
 Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
 best = -0.0074778395 epoch = 176
 
+Score before fine tuning: -0.1545958.
+2024-03-13 12:37:42.073721
+Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.037310723 epoch = 0
+
+Score before fine tuning: -0.3721780.
+2024-03-13 12:40:05.667963
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.33717474 epoch = 2
+
+Score before fine tuning: -0.4782294.
+2024-03-13 12:41:11.803487
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.42935094 epoch = 0
+
+Score before fine tuning: -0.1510674.
+2024-03-13 12:45:31.514706
+Namespace(mode='test', dataset='../cpu_small', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.04045148 epoch = 1
+
