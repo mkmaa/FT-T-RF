@@ -185,7 +185,6 @@ def train(args):
 
 
 def test(args):
-    print(f'checkpoints/finetuned/{args.dataset}.pth')
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__/' + args.dataset)
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     X_train, X_test = RandomFeaturePreprocess(X_train, X_test, d_embedding=args.d_embedding, n_dims=args.n_pca)
@@ -272,6 +271,12 @@ def test(args):
         early_stopping.update(score)
         if epoch >= 10 and early_stopping.should_stop():
             break
+    
+    file_name: str = args.dataset
+    if file_name.startswith('../'):
+        file_name = file_name[3:]
+    file_name = 'checkpoints/finetuned/' + task_type[:3] + '_' + file_name + '.pth'
+    torch.save(test_model.backbone.state_dict(), file_name)
 
     print("\n\nResult:")
     print('best =', best_score, 'epoch =', best_epoch)
