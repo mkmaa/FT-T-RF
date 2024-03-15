@@ -50,7 +50,7 @@ def Evaluate(task_type, y_pred, y_true):
     return score
 
 
-def LeastSquare(X_train, Y_train, X_test, alpha=0.0):
+def LeastSquare(X_train, Y_train, X_test, alpha=0.0): # Linear Regression: use tensor to maintain gradients
     X_train = torch.cat((X_train, torch.ones(X_train.shape[0], 1)), dim=1)
     X_test = torch.cat((X_test, torch.ones(X_test.shape[0], 1)), dim=1)
     I = torch.eye(X_train.shape[1])
@@ -179,7 +179,7 @@ class Model(nn.Module):
 class Model_leastsq(nn.Module):
     def __init__(self, num_datasets, n_features_list, args):
         super(Model_leastsq, self).__init__()
-        if args.mode != 'test' or num_datasets != 1:
+        if args.mode != 'test_lsq' or num_datasets != 1:
             raise AssertionError('testing multiple datasets')
         self.num_datasets = num_datasets
         self.ft = FeatureTokenizer(n_features=args.n_pca, n_dims=args.n_dims)
@@ -376,7 +376,7 @@ def test_leastsq(args):
     if task_type != 'regression' and task_type != 'binclass':
         raise AssertionError('not regression or binclass')
     
-    if task_type == 'binclass':
+    if task_type == 'binclass':     # for binclass least square
         Y_train = Y_train * 2 - 1
     
     # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -403,9 +403,9 @@ def test_leastsq(args):
     with torch.no_grad():
         X_train_emb: list[torch.Tensor] = []
         X_test_emb: list[torch.Tensor] = []
-        for i in tqdm(range(math.ceil(X_train.shape[0]/args.batch))):
+        for i in range(math.ceil(X_train.shape[0]/args.batch)):
             X_train_emb.append(test_model(X_train[i * args.batch : (i + 1) * args.batch]))
-        for i in tqdm(range(math.ceil(X_test.shape[0]/args.batch))):
+        for i in range(math.ceil(X_test.shape[0]/args.batch)):
             X_test_emb.append(test_model(X_test[i * args.batch : (i + 1) * args.batch]))
         X_train_emb = torch.cat(X_train_emb, dim=0)
         X_test_emb = torch.cat(X_test_emb, dim=0)
@@ -489,7 +489,7 @@ def test_leastsq(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='input args')
-    parser.add_argument('--mode', type=str, default='test', choices=['train', 'test'], help='training or testing')
+    parser.add_argument('--mode', type=str, default='test', choices=['train', 'test', 'test_lsq'], help='training or testing')
     parser.add_argument('--dataset', type=str, help='choose the dataset')
     parser.add_argument('--pretrain', type=str, default='False', choices=['True', 'False'], help='whether to use the pretrained value')
     parser.add_argument('--checkpoint', type=str, default='trained_backbone', help='pretrained checkpoint')
@@ -514,6 +514,8 @@ if __name__ == "__main__":
     
     if args.mode == 'train':
         train(args)
+    elif args.mode == 'test':
+        test(args)
     else:
-        # test(args)
+        assert args.mode == 'test_lsq'
         test_leastsq(args)
