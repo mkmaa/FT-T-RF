@@ -9,7 +9,7 @@ from datetime import datetime
 
 from read_data import read_XTab_dataset_test
 from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
-from main import RandomFeaturePreprocess, Evaluate, FeatureTokenizer
+from lib import RandomFeaturePreprocess, Evaluate, FeatureTokenizer
 
 def LeastSquare(X_train, Y_train, X_test, alpha=0.0): # Linear Regression: use tensor to maintain gradients
     X_train = torch.cat((X_train, torch.ones(X_train.shape[0], 1)), dim=1)

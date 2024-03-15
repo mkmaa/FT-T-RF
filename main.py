@@ -1,5 +1,4 @@
 import numpy as np
-import scipy
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -10,70 +9,12 @@ from tqdm.std import tqdm
 import delu
 import math
 from datetime import datetime
-import sklearn
-from sklearn.decomposition import PCA
 
 from read_data import read_XTab_dataset_train, read_XTab_dataset_test
-from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone, _CLSEmbedding
+from lib import RandomFeaturePreprocess, Evaluate, FeatureTokenizer
+from rtdl_revisiting_models import FTTransformer, FTTransformerBackbone
 from least_square import test_leastsq
 from loss import NTXent
-
-
-@torch.no_grad()
-def RandomFeaturePreprocess(
-        X_train: torch.Tensor, 
-        X_test: torch.Tensor, 
-        d_embedding: int, n_dims: int
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-    n_samples_train = X_train.shape[0]
-    n_samples_test = X_test.shape[0]
-    X = torch.cat((X_train, X_test), dim=0)
-    weight = torch.empty(X.shape[1], d_embedding)
-    nn.init.kaiming_normal_(weight, mode='fan_out', nonlinearity='relu')
-    X = X @ weight
-    X = nn.ReLU()(X)
-    pca = PCA(n_components=n_dims)
-    X = torch.from_numpy(pca.fit_transform(X.cpu().numpy())).to(X.device)
-    return torch.split(X, [n_samples_train, n_samples_test], dim=0)
-
-
-@torch.no_grad()
-def Evaluate(task_type, y_pred, y_true):
-    if task_type == "binclass":
-        y_pred = np.round(scipy.special.expit(y_pred))
-        score = sklearn.metrics.accuracy_score(y_true, y_pred)
-    elif task_type == "multiclass":
-        y_pred = y_pred.argmax(1)
-        score = sklearn.metrics.accuracy_score(y_true, y_pred)
-    else:
-        assert task_type == "regression"
-        score = -(sklearn.metrics.mean_squared_error(y_true, y_pred))
-    return score
-
-
-class FeatureTokenizer(nn.Module): # FT-T: CLS + linear embedding
-    def __init__(self, n_features: int, n_dims: int) -> None:
-        super().__init__()
-        self.cls = _CLSEmbedding(n_dims)
-        self.weight = torch.nn.Parameter(torch.empty(n_features, n_dims))
-        self.bias = torch.nn.Parameter(torch.empty(n_features, n_dims))
-        self.reset_parameters()
-
-    def reset_parameters(self) -> None:
-        d_rqsrt = self.weight.shape[1] ** -0.5
-        nn.init.uniform_(self.weight, -d_rqsrt, d_rqsrt)
-        nn.init.uniform_(self.bias, -d_rqsrt, d_rqsrt)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        if x.ndim < 2:
-            raise ValueError(
-                f'The input must have at least two dimensions, however: {x.ndim=}'
-            )
-        x_cls = self.cls(x.shape[:-1])
-        x = x[..., None] * self.weight
-        x = x + self.bias[None]
-        # print(f'{x_cls.shape=}, {x.shape=}')
-        return torch.cat([x_cls, x], dim=1)
 
 
 class ReconstructionHead(nn.Module):
@@ -244,6 +185,7 @@ def train(args):
 
 
 def test(args):
+    print(f'checkpoints/finetuned/{args.dataset}.pth')
     task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__/' + args.dataset)
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     X_train, X_test = RandomFeaturePreprocess(X_train, X_test, d_embedding=args.d_embedding, n_dims=args.n_pca)
@@ -352,7 +294,6 @@ if __name__ == "__main__":
     parser.add_argument('--n_blocks', type=int, default=3, choices=[1, 2, 3, 4, 5, 6], help='n_blocks in PCA and FT-T')
     parser.add_argument('--batch', type=int, default=256, help='batch size')
     parser.add_argument('--seed', type=int, default=0, help='random seed')
-    
     
     args = parser.parse_args()
     args.n_dims = [96, 128, 192, 256, 320, 384][args.n_blocks - 1]
