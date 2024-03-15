@@ -1,6 +1,6 @@
 # $dataset = 'Laptop_Prices_Dataset', '../communities_and_crime', '../cpu_small', 'water_quality', '../ada_agnostic', '../Basketball_c', '../c131', '../UJIndoorLoc'
 $dataset = '../ada_agnostic', '../Basketball_c', '../c131'
-$tf = "False", "True"
+# $tf = "False", "True"
 
 foreach ($data in $dataset) {
     # Add-Content -Path "log.txt" -Value "======== dataset: $data ========`n"

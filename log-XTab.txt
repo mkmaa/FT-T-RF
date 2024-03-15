@@ -446,3 +446,7 @@ Score before fine tuning: 0.8759494.
 Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
 best = 0.8810126582278481 epoch = 15
 
+2024-03-13 19:34:59.255101
+Namespace(mode='test', dataset='LAptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.31508982 epoch = 11
+
