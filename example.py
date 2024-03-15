@@ -214,7 +214,7 @@ def main(args):
 
     print("\n\nResult:")
     print(best)
-    with open("log-FT-T.txt", "a") as f:
+    with open("logs\log-FT-T.txt", "a") as f:
         print(datetime.now(), file=f)
         print(args, file=f)
         print(best, file=f)
@@ -242,6 +242,6 @@ if __name__ == "__main__":
         if args.fan == None:
             raise AssertionError('please input fan mode')
         
-    args.dataset = '..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\'+args.dataset
+    args.dataset = '../../Data-Preprocess-Tabular-Data/data_full/__public__/'+args.dataset
     
     main(args)

@@ -102,3 +102,7 @@ Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\
 Namespace(dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\__public__\\../c131', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=3, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
 {'val': 0.8886075949367088, 'test': 0.8792079207920792, 'epoch': 32}
 
+2024-03-15 19:34:07.810560
+Namespace(dataset='../../Data-Preprocess-Tabular-Data/data_full/__public__/Laptop_Prices_Dataset', rf_in='False', rf_out='False', bias='True', activation='ReGLU', init='xavier_uniform', fan='fan_out', n_blocks=1, normalization='standard', num_nan_policy='mean', cat_nan_policy='most_frequent', cat_policy='onehot', seed=0)
+{'val': -0.3152371, 'test': -0.23898883, 'epoch': 130}
+

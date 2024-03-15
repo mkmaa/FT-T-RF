@@ -187,7 +187,7 @@ def read_dataset(args):
 
 def read_XTab_dataset_train(dataset):
     args = argparse.Namespace(
-        dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
+        dataset='../../Data-Preprocess-Tabular-Data/data_full/'+dataset, 
         normalization='standard', 
         num_nan_policy='mean', 
         cat_nan_policy='most_frequent', 
@@ -215,11 +215,11 @@ def read_XTab_dataset_train(dataset):
     n_feature = X_tot.shape[1]
     X_tot = torch.from_numpy(X_tot).float()
     Y_tot = torch.from_numpy(Y_tot).float()
-    return D.info['task_type'], X_tot[:1000], Y_tot[:1000], n_feature
+    return D.info['task_type'], X_tot[:10000], Y_tot[:10000], n_feature
 
 def read_XTab_dataset_test(dataset):
     args = argparse.Namespace(
-        dataset='..\\..\\Data-Preprocess-Tabular-Data\\data_full\\'+dataset, 
+        dataset='../../Data-Preprocess-Tabular-Data/data_full/'+dataset, 
         normalization='standard', 
         num_nan_policy='mean', 
         cat_nan_policy='most_frequent', 

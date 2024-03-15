@@ -178,8 +178,8 @@ def train(args):
 
 
 def test(args):
-    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__\\' + args.dataset)
-    #                                                # __public__\\Laptop_Prices_Dataset        abalone
+    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__/' + args.dataset)
+    #                                                # __public__/Laptop_Prices_Dataset        abalone
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     
     if task_type != 'regression' and task_type != 'binclass':
@@ -207,7 +207,7 @@ def test(args):
     )
     
     if args.pretrain == 'True':
-        test_model.backbone.load_state_dict(torch.load('checkpoints\\' + args.checkpoint + '.pth'))
+        test_model.backbone.load_state_dict(torch.load('checkpoints/' + args.checkpoint + '.pth'))
     
     n_epochs = 1000000
     patience = 16
@@ -268,7 +268,7 @@ def test(args):
 
     print("\n\nResult:")
     print('best =', best_score, 'epoch =', best_epoch)
-    with open("log-XTab.txt", "a") as f:
+    with open("logs\log-XTab.txt", "a") as f:
         print(datetime.now(), file=f)
         print(args, file=f)
         print('best =', best_score, 'epoch =', best_epoch, file=f)
