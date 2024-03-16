@@ -86,7 +86,7 @@ class SupervisedHead(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, num_datasets, n_features_list, args):
+    def __init__(self, num_datasets, n_features_list, d_out, args):
         super(Model, self).__init__()
         self.num_datasets = num_datasets
         self.rf = nn.ModuleList([
@@ -100,7 +100,7 @@ class Model(nn.Module):
             ContrastiveHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)
         ]) if args.mode == 'train' else None
         self.supervised = nn.ModuleList([
-            SupervisedHead(d_in=args.n_dims, d_out=1) for i in range(num_datasets)
+            SupervisedHead(d_in=args.n_dims, d_out=d_out) for i in range(num_datasets)
         ])
 
     def forward(self, x: dict[torch.Tensor]) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
@@ -117,73 +117,74 @@ class Model(nn.Module):
         return contrast, prediction
 
 
-def train(args):
-    dataX: list[torch.Tensor] = []
-    dataY: list[torch.Tensor] = []
-    n_features_list: list[int] = []
-    n_samples: int = 0
-    for dataset in args.training_dataset:
-        print('Loading dataset', dataset, '...')
-        task_type, X, Y, n = read_XTab_dataset_train(dataset)
-        if task_type == 'regression':
-            dataX.append(X)
-            dataY.append(Y)
-            n_features_list.append(n)
-            n_samples += X.shape[0]
-            print('| Loaded,', X.shape[0], 'samples,', X.shape[1], 'features.')
-        else:
-            print('| Skipped.')
-    if len(n_features_list) != len(dataX) or len(n_features_list) != len(dataY):
-        raise AssertionError('the size of data are different')
-    num_datasets: int = len(n_features_list)
-    print(num_datasets, 'datasets loaded,', n_samples, 'samples in total.')
+# def train(args):
+#     dataX: list[torch.Tensor] = []
+#     dataY: list[torch.Tensor] = []
+#     n_features_list: list[int] = []
+#     n_samples: int = 0
+#     for dataset in args.training_dataset:
+#         print('Loading dataset', dataset, '...')
+#         task_type, X, Y, n_feature = read_XTab_dataset_train(dataset)
+#         if task_type == 'regression':
+#             dataX.append(X)
+#             dataY.append(Y)
+#             n_features_list.append(n_feature)
+#             n_samples += X.shape[0]
+#             print('| Loaded,', X.shape[0], 'samples,', X.shape[1], 'features.')
+#         else:
+#             print('| Skipped.')
+#     if len(n_features_list) != len(dataX) or len(n_features_list) != len(dataY):
+#         raise AssertionError('the size of data are different')
+#     num_datasets: int = len(n_features_list)
+#     print(num_datasets, 'datasets loaded,', n_samples, 'samples in total.')
     
-    model = Model(num_datasets, n_features_list, args)
-    optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-5)
-    criterion = (
-        func.binary_cross_entropy_with_logits
-        if task_type == "binclass"
-        else func.cross_entropy
-        if task_type == "multiclass"
-        else func.mse_loss
-    )
-    timer = delu.tools.Timer()
+#     model = Model(num_datasets, n_features_list, args)
+#     optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-5)
+#     criterion = (
+#         func.binary_cross_entropy_with_logits
+#         if task_type == "binclass"
+#         else func.cross_entropy
+#         if task_type == "multiclass"
+#         else func.mse_loss
+#     )
+#     timer = delu.tools.Timer()
     
-    model.train()
-    timer.run()
-    for epoch in range(100):
-        optimizer.zero_grad()
-        data = copy.deepcopy(dataX)
+#     model.train()
+#     timer.run()
+#     for epoch in range(100):
+#         optimizer.zero_grad()
+#         data = copy.deepcopy(dataX)
         
-        contrast: list[torch.Tensor]
-        prediction: list[torch.Tensor]
-        contrast, prediction = model(data)
-        for i in range(num_datasets):
-            prediction[i] = prediction[i].squeeze(dim=1)
+#         contrast: list[torch.Tensor]
+#         prediction: list[torch.Tensor]
+#         contrast, prediction = model(data)
+#         for i in range(num_datasets):
+#             prediction[i] = prediction[i].squeeze(dim=1)
         
-        contrastive_loss = sum(criterion(contrast[i], dataX[i]) for i in range(num_datasets))
-        supervised_loss = sum(criterion(prediction[i], dataY[i]) for i in range(num_datasets))
-        total_loss = contrastive_loss + supervised_loss
+#         contrastive_loss = sum(criterion(contrast[i], dataX[i]) for i in range(num_datasets))
+#         supervised_loss = sum(criterion(prediction[i], dataY[i]) for i in range(num_datasets))
+#         total_loss = contrastive_loss + supervised_loss
         
-        print('epoch =', epoch)
-        print('| contr loss =', contrastive_loss)
-        print('| supvi loss =', supervised_loss)
-        print('| total loss =', total_loss)
-        print(f'| [time] {timer}')
+#         print('epoch =', epoch)
+#         print('| contr loss =', contrastive_loss)
+#         print('| supvi loss =', supervised_loss)
+#         print('| total loss =', total_loss)
+#         print(f'| [time] {timer}')
 
-        total_loss.backward()
-        optimizer.step()
-    torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
-    # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
+#         total_loss.backward()
+#         optimizer.step()
+#     torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
+#     # torch.save(model.supervised[0].state_dict(), 'checkpoints/trained_header.pth')
 
 
 def test(args):
-    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__/' + args.dataset)
+    task_type, X_train, X_test, Y_train, Y_test, n_feature, d_out = read_XTab_dataset_test('__public__/' + args.dataset)
     #                                                # __public__/Laptop_Prices_Dataset        abalone
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     
-    if task_type != 'regression' and task_type != 'binclass':
-        raise AssertionError('not regression or binclass')
+    if task_type != 'regression' and task_type != 'binclass' and task_type != 'multiclass':
+        raise AssertionError('Unknown task type')
+    print(task_type if task_type != 'multiclass' else f'multiclass, {d_out} classes')
     
     # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     device = torch.device('cpu')
@@ -192,7 +193,7 @@ def test(args):
     X_test = X_test.to(device)
     Y_train = Y_train.to(device)
     
-    test_model = Model(num_datasets=1, n_features_list=[n], args=args).to(device)
+    test_model = Model(num_datasets=1, n_features_list=[n_feature], d_out=d_out, args=args).to(device)
     optimizer = optim.AdamW([
         {'params': list(test_model.backbone.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         # {'params': list(test_model.contrastive.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
@@ -229,7 +230,7 @@ def test(args):
             test_model.train()
             optimizer.zero_grad()
             _, prediction = test_model([batch['x']])
-            # print(f'len pred = {len(prediction)}, shape pred = {prediction[0].shape}')
+            # print(f'pred = {type(prediction)}, y = {type(batch["y"])}')
             loss = criterion(prediction[0].squeeze(dim=1), batch['y'])
             # print(f'loss = {loss.item()}')
             loss.backward()
@@ -299,6 +300,7 @@ if __name__ == "__main__":
     delu.random.seed(args.seed)
     
     if args.mode == 'train':
-        train(args)
+        pass
+        # train(args)
     else:
         test(args)

@@ -69,7 +69,7 @@ class SupervisedHead(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, num_datasets, n_features_list, args):
+    def __init__(self, num_datasets, n_features_list, d_out, args):
         super(Model, self).__init__()
         if args.mode == 'test':
             if num_datasets != 1:
@@ -89,7 +89,7 @@ class Model(nn.Module):
             ContrastiveHead(d_in=args.n_dims, d_out=n_features_list[i]) for i in range(num_datasets)
         ]) if args.mode == 'train' else None
         self.supervised = nn.ModuleList([
-            SupervisedHead(d_in=args.n_dims, d_out=1) for _ in range(num_datasets)
+            SupervisedHead(d_in=args.n_dims, d_out=d_out) for _ in range(num_datasets)
         ])
 
     def forward(self, x):
@@ -116,7 +116,7 @@ def train(args):
     n_samples: int = 0
     for dataset in args.training_dataset:
         print('Loading dataset', dataset, '...')
-        t, X, Y, n = read_XTab_dataset_train(dataset)
+        t, X, Y, n_feature = read_XTab_dataset_train(dataset)
         if (t == 'binclass' or t == 'regression') and X.shape[1] <= 4:
             X, _ = RandomFeaturePreprocess(X, torch.Tensor(), d_embedding=args.d_embedding, n_dims=args.n_pca)
             task_type.append(t)
@@ -137,7 +137,11 @@ def train(args):
     
     ReconstructionLoss = func.mse_loss
     ContrastiveLoss = NTXent()
-    SupervisedLoss = {'binclass': func.binary_cross_entropy_with_logits, 'regression': func.mse_loss}
+    SupervisedLoss = {
+        'binclass': func.binary_cross_entropy_with_logits, 
+        'multiclass': func.cross_entropy, 
+        'regression': func.mse_loss
+    }
     # timer = delu.tools.Timer()
     start_time = datetime.now()
     
@@ -180,18 +184,19 @@ def train(args):
         torch.save(state, 'checkpoints/checkpoint.tar')
         torch.save(model.backbone.state_dict(), 'checkpoints/checkpoint_backbone.pth')
     torch.save(model.backbone.state_dict(), 'checkpoints/trained_backbone.pth')
-    for i in range(num_datasets):
-        torch.save(model.supervised[i].state_dict(), f'checkpoints/headers/{i}.pth')
+    # for i in range(num_datasets):
+    #     torch.save(model.supervised[i].state_dict(), f'checkpoints/headers/{i}.pth')
 
 
 def test(args):
-    task_type, X_train, X_test, Y_train, Y_test, n = read_XTab_dataset_test('__public__/' + args.dataset)
+    task_type, X_train, X_test, Y_train, Y_test, n_feature, d_out = read_XTab_dataset_test('__public__/' + args.dataset)
     print(f'Started training. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     X_train, X_test = RandomFeaturePreprocess(X_train, X_test, d_embedding=args.d_embedding, n_dims=args.n_pca)
     print(f'Started training. After RF. Training size: {X_train.shape[0]}, testing size: {X_test.shape[0]}, feature number: {X_train.shape[1]}.')
     
-    if task_type != 'regression' and task_type != 'binclass':
-        raise AssertionError('not regression or binclass')
+    if task_type != 'regression' and task_type != 'binclass' and task_type != 'multiclass':
+        raise AssertionError('Unknown task type')
+    print(task_type if task_type != 'multiclass' else f'multiclass, {d_out} classes')
     
     # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     device = torch.device('cpu')
@@ -200,7 +205,7 @@ def test(args):
     X_test = X_test.to(device)
     Y_train = Y_train.to(device)
     
-    test_model = Model(num_datasets=1, n_features_list=[n], args=args).to(device)
+    test_model = Model(num_datasets=1, n_features_list=[n_feature], d_out=d_out, args=args).to(device)
     optimizer = optim.AdamW([
         {'params': list(test_model.ft.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
         {'params': list(test_model.backbone.parameters()), 'lr': 1e-4, 'weight_decay': 1e-5},
@@ -218,7 +223,7 @@ def test(args):
         test_model.backbone.load_state_dict(torch.load('checkpoints/' + args.checkpoint + '.pth'))
     
     n_epochs = 1000000
-    patience = 32
+    patience = 16
     batch_size = args.batch
 
     timer = delu.tools.Timer()

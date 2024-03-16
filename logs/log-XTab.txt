@@ -450,3 +450,35 @@ best = 0.8810126582278481 epoch = 15
 Namespace(mode='test', dataset='LAptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
 best = -0.31508982 epoch = 11
 
+2024-03-16 01:16:02.149831
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.31006545 epoch = 32
+
+2024-03-16 04:24:21.804625
+Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.0074778395 epoch = 176
+
+2024-03-16 04:27:35.166063
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.3909364 epoch = 6
+
+2024-03-16 04:49:03.356242
+Namespace(mode='test', dataset='../cpu_small', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.026133949 epoch = 32
+
+2024-03-16 05:01:08.751575
+Namespace(mode='test', dataset='water_quality', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.91171875 epoch = 3
+
+2024-03-16 05:07:52.898157
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8356164383561644 epoch = 4
+
+2024-03-16 05:10:41.347810
+Namespace(mode='test', dataset='../Basketball_c', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.780373831775701 epoch = 9
+
+2024-03-16 05:14:56.320697
+Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8886075949367088 epoch = 10
+

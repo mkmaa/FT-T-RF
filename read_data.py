@@ -253,6 +253,12 @@ def read_XTab_dataset_test(dataset):
     n_samples = X_train.shape[0]
     X_train = torch.from_numpy(X_train).float()
     X_test = torch.from_numpy(X_test).float()
-    Y_train = torch.from_numpy(Y_train.astype(float)).float()
-    Y_test = torch.from_numpy(Y_test.astype(float)).float()
-    return D.info['task_type'], X_train, X_test, Y_train, Y_test, n_feature
+    if D.info['task_type'] == 'multiclass':
+        Y_train = torch.from_numpy(Y_train).long()
+        Y_test = torch.from_numpy(Y_test).long()
+        d_out = D.info['num_class']
+    else:
+        Y_train = torch.from_numpy(Y_train).float()
+        Y_test = torch.from_numpy(Y_test).float()
+        d_out = 1
+    return D.info['task_type'], X_train, X_test, Y_train, Y_test, n_feature, d_out

@@ -693,15 +693,23 @@ best = -0.40762237 epoch = 83
 
 Experiment Result
 
+---- regression ----
 Laptop_Prices_Dataset
 ../UJIndoorLoc
 ../communities_and_crime
 ../cpu_small
 
+---- binclass ----
 water_quality
 ../ada_agnostic
 ../Basketball_c
 ../c131
+
+---- multiclass ----
+dry_bean_dataset
+waveform_database_generator
+../letter_recoginition
+../Credit_c
 
 Dataset         LR          MLP         XGBoost     FT-T        HyperFast       FT-T RF in      FT-T + RF       FT-T + RF + pretrain
 

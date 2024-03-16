@@ -36,10 +36,10 @@ def main(args):
     D, N, C, Y, y_info = read_dataset(args)
 
     task_type: TaskType = D.info['task_type']
-    n_classes = 2
+    n_classes = 2 if task_type == 'binclass' else D.info['num_class']
     
-    if task_type != 'regression' and task_type != 'binclass':
-        raise AssertionError('not regression or binclass')
+    # if task_type != 'regression' and task_type != 'binclass':
+    #     raise AssertionError('not regression or binclass')
 
     # >>> Labels.
     # Regression labels must be represented by float32.
