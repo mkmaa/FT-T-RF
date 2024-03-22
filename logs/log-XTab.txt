@@ -482,3 +482,163 @@ best = 0.780373831775701 epoch = 9
 Namespace(mode='test', dataset='../c131', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
 best = 0.8886075949367088 epoch = 10
 
+2024-03-17 02:32:11.024699
+Namespace(mode='test', dataset='dry_bean_dataset', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.9302112029384757 epoch = 12
+
+2024-03-17 02:40:41.927560
+Namespace(mode='test', dataset='../drug_consumption', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.40397350993377484 epoch = 6
+
+2024-03-17 03:39:36.836065
+Namespace(mode='test', dataset='../letter_recognition', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.9665625 epoch = 54
+
+2024-03-17 04:02:42.750646
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='finetuned/reg_communities_and_crime', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.31492403 epoch = 13
+
+2024-03-17 04:07:28.809468
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='finetuned/reg_cpu_small', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.31235996 epoch = 10
+
+2024-03-17 04:12:13.969043
+Namespace(mode='test', dataset='Laptop_Prices_Dataset', pretrain='True', checkpoint='finetuned/reg_UJIndoorLoc', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.30718443 epoch = 10
+
+2024-03-17 05:02:12.167127
+Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='True', checkpoint='finetuned/reg_Laptop_Prices_Dataset', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.009096867 epoch = 39
+
+2024-03-17 06:22:22.201737
+Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='True', checkpoint='finetuned/reg_communities_and_crime', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.010723629 epoch = 73
+
+2024-03-17 08:27:58.346921
+Namespace(mode='test', dataset='../UJIndoorLoc', pretrain='True', checkpoint='finetuned/reg_cpu_small', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.008785971 epoch = 124
+
+2024-03-17 08:29:59.562438
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='True', checkpoint='finetuned/reg_Laptop_Prices_Dataset', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.38847813 epoch = 7
+
+2024-03-17 08:32:13.049153
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='True', checkpoint='finetuned/reg_cpu_small', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.37428495 epoch = 10
+
+2024-03-17 08:34:12.674532
+Namespace(mode='test', dataset='../communities_and_crime', pretrain='True', checkpoint='finetuned/reg_UJIndoorLoc', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.3606167 epoch = 7
+
+2024-03-17 08:52:51.015343
+Namespace(mode='test', dataset='../cpu_small', pretrain='True', checkpoint='finetuned/reg_Laptop_Prices_Dataset', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.025969435 epoch = 40
+
+2024-03-17 09:00:06.696008
+Namespace(mode='test', dataset='../cpu_small', pretrain='True', checkpoint='finetuned/reg_communities_and_crime', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.02700829 epoch = 5
+
+2024-03-17 09:07:40.129818
+Namespace(mode='test', dataset='../cpu_small', pretrain='True', checkpoint='finetuned/reg_UJIndoorLoc', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = -0.027093912 epoch = 6
+
+2024-03-17 09:15:22.778618
+Namespace(mode='test', dataset='water_quality', pretrain='True', checkpoint='finetuned/bin_ada_agnostic', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.91015625 epoch = 6
+
+2024-03-17 09:22:22.746525
+Namespace(mode='test', dataset='water_quality', pretrain='True', checkpoint='finetuned/bin_Basketball_c', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.90703125 epoch = 4
+
+2024-03-17 09:29:45.942346
+Namespace(mode='test', dataset='water_quality', pretrain='True', checkpoint='finetuned/bin_c131', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.90859375 epoch = 5
+
+2024-03-17 09:34:07.854642
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='True', checkpoint='finetuned/bin_Basketball_c', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8397260273972603 epoch = 7
+
+2024-03-17 09:37:57.171691
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='True', checkpoint='finetuned/bin_c131', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8328767123287671 epoch = 4
+
+2024-03-17 09:41:35.481168
+Namespace(mode='test', dataset='../ada_agnostic', pretrain='True', checkpoint='finetuned/bin_water_quality', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8342465753424657 epoch = 3
+
+2024-03-17 09:44:47.669462
+Namespace(mode='test', dataset='../Basketball_c', pretrain='True', checkpoint='finetuned/bin_ada_agnostic', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.7757009345794392 epoch = 31
+
+2024-03-17 09:46:10.573001
+Namespace(mode='test', dataset='../Basketball_c', pretrain='True', checkpoint='finetuned/bin_c131', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.7429906542056075 epoch = 3
+
+2024-03-17 09:47:28.976261
+Namespace(mode='test', dataset='../Basketball_c', pretrain='True', checkpoint='finetuned/bin_water_quality', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.7570093457943925 epoch = 2
+
+2024-03-17 09:49:11.160006
+Namespace(mode='test', dataset='../c131', pretrain='True', checkpoint='finetuned/bin_ada_agnostic', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8784810126582279 epoch = 0
+
+2024-03-17 09:51:15.772714
+Namespace(mode='test', dataset='../c131', pretrain='True', checkpoint='finetuned/bin_Basketball_c', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8810126582278481 epoch = 4
+
+2024-03-17 09:53:21.038463
+Namespace(mode='test', dataset='../c131', pretrain='True', checkpoint='finetuned/bin_water_quality', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.8835443037974684 epoch = 4
+
+2024-03-17 10:05:36.922550
+Namespace(mode='test', dataset='dry_bean_dataset', pretrain='True', checkpoint='finetuned/mul_letter_recognition', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.931129476584022 epoch = 4
+
+2024-03-17 10:24:10.324452
+Namespace(mode='test', dataset='dry_bean_dataset', pretrain='True', checkpoint='finetuned/mul_drug_consumption', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.9320477502295684 epoch = 15
+
+2024-03-17 10:25:40.149772
+Namespace(mode='test', dataset='../drug_consumption', pretrain='True', checkpoint='finetuned/mul_dry_bean_dataset', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.3609271523178808 epoch = 1
+
+2024-03-17 10:27:09.288098
+Namespace(mode='test', dataset='../drug_consumption', pretrain='True', checkpoint='finetuned/mul_letter_recognition', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.41721854304635764 epoch = 2
+
+2024-03-17 11:31:24.746256
+Namespace(mode='test', dataset='../letter_recognition', pretrain='True', checkpoint='finetuned/mul_dry_bean_dataset', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.965 epoch = 62
+
+2024-03-17 12:18:18.991795
+Namespace(mode='test', dataset='../letter_recognition', pretrain='True', checkpoint='finetuned/mul_drug_consumption', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.9715625 epoch = 42
+
+2024-03-17 13:49:40.461433
+Namespace(mode='test', dataset='Mobile_Price_Classification', pretrain='False', checkpoint='trained_backbone', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.9125 epoch = 15
+
+2024-03-17 14:18:13.534371
+Namespace(mode='test', dataset='dry_bean_dataset', pretrain='True', checkpoint='finetuned/mul_Mobile_Price_Classification', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.9292929292929293 epoch = 30
+
+2024-03-17 14:20:05.567847
+Namespace(mode='test', dataset='../drug_consumption', pretrain='True', checkpoint='finetuned/mul_Mobile_Price_Classification', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.4139072847682119 epoch = 6
+
+2024-03-17 15:03:09.819025
+Namespace(mode='test', dataset='../letter_recognition', pretrain='True', checkpoint='finetuned/mul_Mobile_Price_Classification', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.964375 epoch = 35
+
+2024-03-17 15:04:53.639710
+Namespace(mode='test', dataset='Mobile_Price_Classification', pretrain='True', checkpoint='finetuned/mul_dry_bean_dataset', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.903125 epoch = 4
+
+2024-03-17 15:06:39.239216
+Namespace(mode='test', dataset='Mobile_Price_Classification', pretrain='True', checkpoint='finetuned/mul_letter_recognition', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.90625 epoch = 4
+
+2024-03-17 15:08:29.971823
+Namespace(mode='test', dataset='Mobile_Price_Classification', pretrain='True', checkpoint='finetuned/mul_drug_consumption', load_checkpoint='False', d_embedding=8192, n_pca=96, n_blocks=3, batch=256, seed=0, n_dims=192)
+best = 0.89375 epoch = 6
+

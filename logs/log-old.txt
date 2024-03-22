@@ -707,9 +707,9 @@ water_quality
 
 ---- multiclass ----
 dry_bean_dataset
-waveform_database_generator
+../drug_consumption
 ../letter_recoginition
-../Credit_c
+Mobile_Price_Classification
 
 Dataset         LR          MLP         XGBoost     FT-T        HyperFast       FT-T RF in      FT-T + RF       FT-T + RF + pretrain
 
